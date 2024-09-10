@@ -69,9 +69,13 @@ def handle_user_input(user_input):
         response = with_message_history.invoke({"input": user_input}, config={"configurable": {"session_id": "stringx"}})
         logging.debug(f"Response from agent: {response}")
         # Extract and format the bot's response
-        bot_response = response['output']
-        if isinstance(bot_response, str):
-            clean_response = bot_response
+        bot_response = response.get('output', [])
+        if bot_response and isinstance(bot_response, list) and len(bot_response) > 0:
+            first_response = bot_response[0]
+            if isinstance(first_response, dict) and 'text' in first_response:
+                clean_response = first_response['text']
+            else:
+                clean_response = "Sorry, I couldn't understand the response."
         else:
             clean_response = "Sorry, I couldn't understand the response."
         return clean_response
