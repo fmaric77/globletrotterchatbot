@@ -63,7 +63,11 @@ def handle_user_input(user_input):
         response = with_message_history.invoke({"input": user_input}, config={"configurable": {"session_id": "stringx"}})
         # Extract and format the bot's response
         bot_response = response['output']
-        return bot_response
+        if isinstance(bot_response, list) and len(bot_response) > 0 and 'text' in bot_response[0]:
+            clean_response = bot_response[0]['text']
+        else:
+            clean_response = "Sorry, I couldn't understand the response."
+        return clean_response
     except Exception as e:
         logging.error(f"Error handling user input: {e}")
         return f"An error occurred: {e}"
