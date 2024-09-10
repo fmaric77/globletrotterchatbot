@@ -8,13 +8,23 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
 from weathertools import get_current_weather, get_weather_forecast
 from wikipediatools import get_city_highlights
+from dotenv import load_dotenv
+import os
 import logging
+
+# Load environment variables
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
+# Ensure AWS_DEFAULT_REGION is set
+if 'AWS_DEFAULT_REGION' not in os.environ:
+    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'  # Set your default region here
+
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
+chat_model = None
 try:
     chat_model = ChatBedrock(model_id=chat_model_id).bind_tools([get_current_weather, get_weather_forecast, get_city_highlights])
 except Exception as e:
@@ -35,16 +45,20 @@ memory = ChatMessageHistory()
 tools = [get_current_weather, get_weather_forecast, get_city_highlights]
 
 # Create agent and executor
-try:
-    agent = create_tool_calling_agent(chat_model, tools, prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-    with_message_history = RunnableWithMessageHistory(agent_executor, lambda x: memory, input_messages_key="input")
-except Exception as e:
-    logging.error(f"Error creating agent and executor: {e}")
-    st.error(f"Error creating agent and executor: {e}")
+agent_executor = None
+if chat_model:
+    try:
+        agent = create_tool_calling_agent(chat_model, tools, prompt)
+        agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+        with_message_history = RunnableWithMessageHistory(agent_executor, lambda x: memory, input_messages_key="input")
+    except Exception as e:
+        logging.error(f"Error creating agent and executor: {e}")
+        st.error(f"Error creating agent and executor: {e}")
 
 # Function to handle user input
 def handle_user_input(user_input):
+    if not agent_executor:
+        return "Agent executor is not initialized."
     try:
         response = with_message_history.invoke({"input": user_input}, config={"configurable": {"session_id": "stringx"}})
         # Extract and format the bot's response
