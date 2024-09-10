@@ -8,10 +8,18 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
 from weathertools import get_current_weather, get_weather_forecast
 from wikipediatools import get_city_highlights
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
-chat_model = ChatBedrock(model_id=chat_model_id).bind_tools([get_current_weather, get_weather_forecast, get_city_highlights])
+try:
+    chat_model = ChatBedrock(model_id=chat_model_id).bind_tools([get_current_weather, get_weather_forecast, get_city_highlights])
+except Exception as e:
+    logging.error(f"Error initializing ChatBedrock: {e}")
+    st.error(f"Error initializing ChatBedrock: {e}")
 
 # Create agent with prompt template
 prompt = ChatPromptTemplate.from_messages([
@@ -27,9 +35,13 @@ memory = ChatMessageHistory()
 tools = [get_current_weather, get_weather_forecast, get_city_highlights]
 
 # Create agent and executor
-agent = create_tool_calling_agent(chat_model, tools, prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-with_message_history = RunnableWithMessageHistory(agent_executor, lambda x: memory, input_messages_key="input")
+try:
+    agent = create_tool_calling_agent(chat_model, tools, prompt)
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+    with_message_history = RunnableWithMessageHistory(agent_executor, lambda x: memory, input_messages_key="input")
+except Exception as e:
+    logging.error(f"Error creating agent and executor: {e}")
+    st.error(f"Error creating agent and executor: {e}")
 
 # Function to handle user input
 def handle_user_input(user_input):
@@ -39,6 +51,7 @@ def handle_user_input(user_input):
         bot_response = response['output']
         return bot_response
     except Exception as e:
+        logging.error(f"Error handling user input: {e}")
         return f"An error occurred: {e}"
 
 # Streamlit UI
