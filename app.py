@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 # Ensure AWS_DEFAULT_REGION is set
 if 'AWS_DEFAULT_REGION' not in os.environ:
-    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'  # Set your default region here
+    os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'  # Set your default region here
 
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
@@ -72,8 +72,8 @@ def handle_user_input(user_input):
 st.title("Weather and Olympic Data Chatbot")
 
 # Images for user and bot
-user_image = "https://via.placeholder.com/50/007bff/ffffff?text=U"
-bot_image = "https://via.placeholder.com/50/ff0000/ffffff?text=B"
+user_image = "images/user.png"
+bot_image = "images/bot.png"
 
 # Function to display messages
 def display_message(image_url, sender, message, is_user=True):
