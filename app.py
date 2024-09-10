@@ -73,7 +73,7 @@ def handle_user_input(user_input):
         return f"An error occurred: {e}"
 
 # Streamlit UI
-st.title("Weather and Olympic Data Chatbot")
+st.title("Weather and Olympicc Data Chatbot")
 
 # Images for user and bot
 user_image = "images/user.png"
