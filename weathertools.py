@@ -42,6 +42,38 @@ def fetch_weather_forecast(city):
         print(f"Error fetching weather forecast: {response.status_code} - {response.text}")
         return None
 
+# Function to get latitude and longitude of a city
+def get_city_coordinates(city):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        coordinates = {
+            "latitude": data['coord']['lat'],
+            "longitude": data['coord']['lon']
+        }
+        return coordinates
+    else:
+        print(f"Error fetching city coordinates: {response.status_code} - {response.text}")
+        return None
+
+# Function to fetch historical weather data
+def fetch_historical_weather(latitude, longitude, start_date, end_date):
+    url = f"https://archive-api.open-meteo.com/v1/era5?latitude={latitude}&longitude={longitude}&start_date={start_date}&end_date={end_date}&hourly=temperature_2m"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        historical_weather = []
+        for time, temp in zip(data['hourly']['time'], data['hourly']['temperature_2m']):
+            historical_weather.append({
+                "datetime": time,
+                "temperature": temp
+            })
+        return historical_weather
+    else:
+        print(f"Error fetching historical weather: {response.status_code} - {response.text}")
+        return None
+
 # Wrap the weather functions as tools
 @tool
 def get_current_weather(city: str) -> str:
@@ -63,3 +95,28 @@ def get_weather_forecast(city: str) -> str:
         return forecast_str
     else:
         return f"City not found or API error. It looks like there was an error retrieving the weather forecast for {city}. The API may not have been able to find the city or there was an issue with the connection. I apologize that I'm unable to provide the weather forecast for {city} at this time. Please let me know if you have any other questions!"
+
+@tool
+def get_historical_weather(city: str, start_date: str, end_date: str) -> str:
+    """Get the historical weather data for a specified city and date range."""
+    coordinates = get_city_coordinates(city)
+    if coordinates:
+        latitude = coordinates['latitude']
+        longitude = coordinates['longitude']
+        historical_weather_info = fetch_historical_weather(latitude, longitude, start_date, end_date)
+        if historical_weather_info:
+            total_temp = 0
+            count = 0
+            historical_weather_str = f"Historical weather data for {city} from {start_date} to {end_date}:\n"
+            for entry in historical_weather_info:
+                historical_weather_str += f"{entry['datetime']}: {entry['temperature']}°C\n"
+                total_temp += entry['temperature']
+                count += 1
+            if count > 0:
+                average_temp = total_temp / count
+                historical_weather_str += f"\nSummary:\nAverage Temperature: {average_temp:.2f}°C"
+            return historical_weather_str
+        else:
+            return f"Error fetching historical weather data. Please check the input parameters and try again."
+    else:
+        return f"City not found or API error. It looks like there was an error retrieving the coordinates for {city}. The API may not have been able to find the city or there was an issue with the connection. I apologize that I'm unable to provide the historical weather data for {city} at this time. Please let me know if you have any other questions!"

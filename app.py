@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
-from weathertools import get_current_weather, get_weather_forecast
+from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
 from wikipediatools import get_city_highlights
 from dotenv import load_dotenv
 import os
@@ -26,7 +26,7 @@ if 'AWS_DEFAULT_REGION' not in os.environ:
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
 chat_model = None
 try:
-    chat_model = ChatBedrock(model_id=chat_model_id).bind_tools([get_current_weather, get_weather_forecast, get_city_highlights])
+    chat_model = ChatBedrock(model_id=chat_model_id).bind_tools([get_current_weather, get_weather_forecast, get_city_highlights, get_historical_weather])
 except Exception as e:
     logging.error(f"Error initializing ChatBedrock: {e}")
     st.error(f"Error initializing ChatBedrock: {e}")
@@ -42,7 +42,7 @@ prompt = ChatPromptTemplate.from_messages([
 memory = ChatMessageHistory()
 
 # Define tools
-tools = [get_current_weather, get_weather_forecast, get_city_highlights]
+tools = [get_current_weather, get_weather_forecast, get_city_highlights, get_historical_weather]
 
 # Create agent and executor
 agent_executor = None
@@ -61,10 +61,11 @@ def handle_user_input(user_input):
         return "Agent executor is not initialized."
     try:
         response = with_message_history.invoke({"input": user_input}, config={"configurable": {"session_id": "stringx"}})
+        logging.debug(f"Response from agent: {response}")
         # Extract and format the bot's response
         bot_response = response['output']
-        if isinstance(bot_response, list) and len(bot_response) > 0 and 'text' in bot_response[0]:
-            clean_response = bot_response[0]['text']
+        if isinstance(bot_response, str):
+            clean_response = bot_response
         else:
             clean_response = "Sorry, I couldn't understand the response."
         return clean_response
