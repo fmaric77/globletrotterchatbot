@@ -6,17 +6,23 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
-from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
-from wikipediatools import get_city_highlights
 from dotenv import load_dotenv
 import os
 import logging
-
-# Load environment variables
-load_dotenv()
+import sys
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
+
+try:
+    from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
+    from wikipediatools import get_city_highlights
+except ImportError as e:
+    logging.error(f"Error importing modules: {e}")
+    st.error(f"Error importing modules: {e}")
+
+# Load environment variables
+load_dotenv()
 
 # Ensure AWS_DEFAULT_REGION is set
 if 'AWS_DEFAULT_REGION' not in os.environ:
