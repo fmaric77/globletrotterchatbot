@@ -1,0 +1,6 @@
+streamlit
+langchain_aws
+langchain_core
+langchain
+weathertools
+wikipediatools
