@@ -6,6 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 WIKIPEDIA_API_URL = "https://en.wikipedia.org/api/rest_v1/page/summary"
+WIKIPEDIA_SPORTS_URL = "https://en.wikipedia.org/wiki/Sport_in"
 
 def fetch_wikipedia_summary(page_title):
     """Fetch summary information from Wikipedia for a given page title."""
@@ -36,26 +37,13 @@ def get_city_highlights(city: str) -> str:
         return f"City not found or API error. It looks like there was an error retrieving information for {city}. Please try again later."
 
 @tool
-def get_sport_clubs_info(city: str, country: str, club: str = None) -> str:
-    """Get the most popular sport clubs in the country of the specified city and their recent success.
-    
-    If a specific club is mentioned, fetch information about that club.
-    """
-    if club:
-        page_title = club.replace(" ", "_")
-        summary = fetch_wikipedia_summary(page_title)
-        if summary == "Page not found.":
-            return f"No specific information available for the club {club}. It seems there is no dedicated page for {club} on Wikipedia."
-        elif summary:
-            return f"Recent success of {club}:\n{summary}"
-        else:
-            return f"No information available for the club {club} or API error. Please try again later."
+def get_sport_clubs_info(city: str, country: str) -> str:
+    """Get the most popular sport clubs in the country of the specified city and their recent success."""
+    page_title = f"Sport_in_{country}"
+    summary = fetch_wikipedia_summary(page_title)
+    if summary == "Page not found.":
+        return f"No specific sports information available for the country of {city}. It seems there is no dedicated page for sports in the country of {city} on Wikipedia."
+    elif summary:
+        return f"Most popular sport clubs in the country of {city} and their recent success:\n{summary}"
     else:
-        page_title = f"Sport_in_{country}"
-        summary = fetch_wikipedia_summary(page_title)
-        if summary == "Page not found.":
-            return f"No specific sports information available for the country of {city}. It seems there is no dedicated page for sports in the country of {city} on Wikipedia."
-        elif summary:
-            return f"Most popular sport clubs in the country of {city} and their recent success:\n{summary}"
-        else:
-            return f"No information available for sport clubs in the country of {city} or API error. Please try again later."
+        return f"No information available for sport clubs in the country of {city} or API error. Please try again later."
