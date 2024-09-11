@@ -2,7 +2,6 @@ import boto3
 from langchain.tools import tool
 import os
 import textwrap
-from tabulate import tabulate
 
 # Initialize the Glue client
 glue_client = boto3.client(
@@ -18,12 +17,11 @@ def get_glue_catalog_database(database_name: str) -> str:
     try:
         response = glue_client.get_database(Name=database_name)
         database = response['Database']
-        table_data = [
-            ["Database Name", database['Name']],
-            ["Description", database.get('Description', 'No description')],
-            ["Location URI", database.get('LocationUri', 'No location URI')]
-        ]
-        formatted_output = tabulate(table_data, headers=["Field", "Value"], tablefmt="grid")
+        formatted_output = textwrap.dedent(f"""
+            Database Name: {database['Name']}
+            Description : {database.get('Description', 'No description')}
+            Location URI: {database.get('LocationUri', 'No location URI')}
+        """).strip()
         return formatted_output
     except glue_client.exceptions.EntityNotFoundException:
         return f"Database {database_name} not found."
