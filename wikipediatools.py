@@ -37,13 +37,35 @@ def get_city_highlights(city: str) -> str:
         return f"City not found or API error. It looks like there was an error retrieving information for {city}. Please try again later."
 
 @tool
-def get_sport_clubs_info(city: str, country: str) -> str:
+def get_sport_clubs_info(city: str, country: str, club: str = None) -> str:
     """Get the most popular sport clubs in the country of the specified city and their recent success."""
-    page_title = f"Sport_in_{country}"
+    if club:
+        page_title = club
+    else:
+        page_title = f"Sport_in_{country}"
+    
     summary = fetch_wikipedia_summary(page_title)
+    
     if summary == "Page not found.":
-        return f"No specific sports information available for the country of {city}. It seems there is no dedicated page for sports in the country of {city} on Wikipedia."
+        if club:
+            return f"No specific information available for the club {club}. It seems there is no dedicated page for {club} on Wikipedia."
+        else:
+            return f"No specific sports information available for the country of {city}. It seems there is no dedicated page for sports in the country of {city} on Wikipedia."
     elif summary:
-        return f"Most popular sport clubs in the country of {city} and their recent success:\n{summary}"
+        if club:
+            return f"Recent success of the club {club}:\n{summary}"
+        else:
+            return f"Most popular sport clubs in the country of {city} and their recent success:\n{summary}"
     else:
         return f"No information available for sport clubs in the country of {city} or API error. Please try again later."
+
+@tool
+def get_sportsman_info(sportsman: str) -> str:
+    """Get an info summary about a specific sportsman."""
+    summary = fetch_wikipedia_summary(sportsman)
+    if summary == "Page not found.":
+        return f"No specific information available for the sportsman {sportsman}. It seems there is no dedicated page for {sportsman} on Wikipedia."
+    elif summary:
+        return f"Information about {sportsman}:\n{summary}"
+    else:
+        return f"No information available for the sportsman {sportsman} or API error. Please try again later."
