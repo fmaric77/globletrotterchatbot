@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 try:
     from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
-    from wikipediatools import get_city_highlights
+    from wikipediatools import get_city_highlights, get_sport_clubs_info
 except ImportError as e:
     logging.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
@@ -32,7 +32,7 @@ if 'AWS_DEFAULT_REGION' not in os.environ:
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
 chat_model = None
 try:
-    chat_model = ChatBedrock(model_id=chat_model_id).bind_tools([get_current_weather, get_weather_forecast, get_city_highlights, get_historical_weather])
+    chat_model = ChatBedrock(model_id=chat_model_id).bind_tools([get_current_weather, get_weather_forecast, get_city_highlights, get_historical_weather, get_sport_clubs_info])
 except Exception as e:
     logging.error(f"Error initializing ChatBedrock: {e}")
     st.error(f"Error initializing ChatBedrock: {e}")
@@ -48,7 +48,7 @@ prompt = ChatPromptTemplate.from_messages([
 memory = ChatMessageHistory()
 
 # Define tools
-tools = [get_current_weather, get_weather_forecast, get_city_highlights, get_historical_weather]
+tools = [get_current_weather, get_weather_forecast, get_city_highlights, get_historical_weather, get_sport_clubs_info]
 
 # Create agent and executor
 agent_executor = None
