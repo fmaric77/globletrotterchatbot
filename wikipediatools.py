@@ -15,9 +15,16 @@ def fetch_wikipedia_summary(page_title):
         response.raise_for_status()
         data = response.json()
         return data.get('extract', 'No summary available.')
+    except requests.exceptions.HTTPError as http_err:
+        if response.status_code == 404:
+            logging.error(f"Page not found for {page_title}: {http_err}")
+            return "Page not found."
+        else:
+            logging.error(f"HTTP error occurred for {page_title}: {http_err}")
+            return "HTTP error occurred."
     except requests.RequestException as e:
         logging.error(f"Error fetching Wikipedia summary for {page_title}: {e}")
-        return None
+        return "An error occurred while fetching data."
 
 @tool
 def get_city_highlights(city: str) -> str:
@@ -29,11 +36,26 @@ def get_city_highlights(city: str) -> str:
         return f"City not found or API error. It looks like there was an error retrieving information for {city}. Please try again later."
 
 @tool
-def get_sport_clubs_info(city: str) -> str:
-    """Get the most popular sport clubs in the city and their recent success."""
-    page_title = f"{city}_sports"
-    summary = fetch_wikipedia_summary(page_title)
-    if summary:
-        return f"Most popular sport clubs in {city} and their recent success:\n{summary}"
+def get_sport_clubs_info(city: str, country: str, club: str = None) -> str:
+    """Get the most popular sport clubs in the country of the specified city and their recent success.
+    
+    If a specific club is mentioned, fetch information about that club.
+    """
+    if club:
+        page_title = club.replace(" ", "_")
+        summary = fetch_wikipedia_summary(page_title)
+        if summary == "Page not found.":
+            return f"No specific information available for the club {club}. It seems there is no dedicated page for {club} on Wikipedia."
+        elif summary:
+            return f"Recent success of {club}:\n{summary}"
+        else:
+            return f"No information available for the club {club} or API error. Please try again later."
     else:
-        return f"No information available for sport clubs in {city} or API error. Please try again later."
+        page_title = f"Sport_in_{country}"
+        summary = fetch_wikipedia_summary(page_title)
+        if summary == "Page not found.":
+            return f"No specific sports information available for the country of {city}. It seems there is no dedicated page for sports in the country of {city} on Wikipedia."
+        elif summary:
+            return f"Most popular sport clubs in the country of {city} and their recent success:\n{summary}"
+        else:
+            return f"No information available for sport clubs in the country of {city} or API error. Please try again later."
