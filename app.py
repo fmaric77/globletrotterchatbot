@@ -15,7 +15,8 @@ import sys
 logging.basicConfig(level=logging.DEBUG)
 
 try:
-    from weathertools import get_current_weather, get_weather_forecast, get_historical_weather,recommend_best_time_to_visit
+    from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
+    from weathertools2 import recommend_best_time_to_visit
     from wikipediatools import get_city_highlights, get_sport_clubs_info,get_sportsman_info
 except ImportError as e:
     logging.error(f"Error importing modules: {e}")
