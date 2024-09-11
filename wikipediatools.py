@@ -1,18 +1,24 @@
 import requests
 from langchain.tools import tool
+import logging
 
-# Function to fetch historical and cultural information from Wikipedia
-def fetch_wikipedia_summary(city):
-    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{city}"
-    response = requests.get(url)
-    if response.status_code == 200:
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+
+WIKIPEDIA_API_URL = "https://en.wikipedia.org/api/rest_v1/page/summary"
+
+def fetch_wikipedia_summary(page_title):
+    """Fetch summary information from Wikipedia for a given page title."""
+    url = f"{WIKIPEDIA_API_URL}/{page_title}"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
         data = response.json()
         return data.get('extract', 'No summary available.')
-    else:
-        print(f"Error fetching Wikipedia summary: {response.status_code} - {response.text}")
+    except requests.RequestException as e:
+        logging.error(f"Error fetching Wikipedia summary for {page_title}: {e}")
         return None
 
-# Wrap the Wikipedia function as a tool
 @tool
 def get_city_highlights(city: str) -> str:
     """Get historical and cultural highlights of a past Olympic host city."""
@@ -21,25 +27,12 @@ def get_city_highlights(city: str) -> str:
         return f"Historical and cultural highlights of {city}:\n{summary}"
     else:
         return f"City not found or API error. It looks like there was an error retrieving information for {city}. Please try again later."
-    
 
-
-# Function to fetch information about popular sport clubs in a city from Wikipedia
-def fetch_sport_clubs_info(city):
-    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{city}_sports"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        return data.get('extract', 'No information available.')
-    else:
-        print(f"Error fetching Wikipedia summary: {response.status_code} - {response.text}")
-        return None
-
-# Wrap the sport clubs function as a tool
 @tool
 def get_sport_clubs_info(city: str) -> str:
     """Get the most popular sport clubs in the city and their recent success."""
-    summary = fetch_sport_clubs_info(city)
+    page_title = f"{city}_sports"
+    summary = fetch_wikipedia_summary(page_title)
     if summary:
         return f"Most popular sport clubs in {city} and their recent success:\n{summary}"
     else:
