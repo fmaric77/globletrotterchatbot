@@ -4,62 +4,58 @@ import os
 import csv
 import pandas as pd
 import uuid
+import time
 
-# Initialize the Glue client
-glue_client = boto3.client(
-    'glue',
+# Initialize the Athena client
+athena_client = boto3.client(
+    'athena',
     region_name=os.getenv('AWS_DEFAULT_REGION'),
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 
 @tool
-def get_glue_catalog_database(database_name: str) -> dict:
-    """Get details of a specified Glue Data Catalog database and save its tables' content as CSV files."""
+def query_athena(query: str) -> list:
+    """Execute a query in Athena and return the results as a list of dictionaries."""
     try:
-        # Get the list of tables in the database
-        tables_response = glue_client.get_tables(DatabaseName=database_name)
-        tables = tables_response['TableList']
+        # Set the Athena parameters
+        database = os.getenv('ATHENA_DATABASE')
+        output_location = os.getenv('ATHENA_OUTPUT_LOCATION')
         
-        for table in tables:
-            table_name = table['Name']
-            # Get the table schema
-            table_response = glue_client.get_table(DatabaseName=database_name, Name=table_name)
-            table_schema = table_response['Table']['StorageDescriptor']['Columns']
-            
-            # Hardcoded S3 location
-            s3_location = f"s3://olympics-travel-mockdb/{table_name}.csv"
-            print(f"Processing table: {table_name}, S3 location: {s3_location}")
-            
-            # Read the data from S3
-            data = read_s3_data(s3_location)
-            
-            if not data:
-                print(f"No data found for table: {table_name}")
-                continue
-            
-            # Generate a random name for the CSV file
-            csv_file = f"{database_name}_{table_name}_{uuid.uuid4().hex}.csv"
-            with open(csv_file, mode='w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=[col['Name'] for col in table_schema])
-                writer.writeheader()
-                writer.writerows(data)
-                print(f"Data for table {table_name} saved to {csv_file}")
+        # Start the query execution
+        response = athena_client.start_query_execution(
+            QueryString=query,
+            QueryExecutionContext={'Database': database},
+            ResultConfiguration={'OutputLocation': output_location}
+        )
         
-        return {"status": "success", "message": f"Data from database {database_name} saved to CSV files."}
-    except glue_client.exceptions.EntityNotFoundException:
-        return {"error": f"Database {database_name} not found."}
+        query_execution_id = response['QueryExecutionId']
+        
+        # Wait for the query to complete
+        while True:
+            query_status = athena_client.get_query_execution(QueryExecutionId=query_execution_id)
+            status = query_status['QueryExecution']['Status']['State']
+            if status in ['SUCCEEDED', 'FAILED', 'CANCELLED']:
+                break
+            time.sleep(2)
+        
+        if status != 'SUCCEEDED':
+            raise Exception(f"Query failed with status: {status}")
+        
+        # Get the query results
+        results = athena_client.get_query_results(QueryExecutionId=query_execution_id)
+        rows = results['ResultSet']['Rows']
+        
+        # Extract the column names
+        column_info = rows[0]['Data']
+        columns = [col['VarCharValue'] for col in column_info]
+        
+        # Extract the data rows
+        data = []
+        for row in rows[1:]:
+            data.append({columns[i]: row['Data'][i]['VarCharValue'] for i in range(len(columns))})
+        
+        return data
     except Exception as e:
-        return {"error": f"Error accessing Glue Data Catalog: {str(e)}"}
-
-def read_s3_data(s3_location: str) -> list:
-    """Read data from an S3 location and return it as a list of dictionaries."""
-    try:
-        # Read the CSV file from S3 using pandas
-        print(f"Reading data from S3 location: {s3_location}")
-        df = pd.read_csv(s3_location)
-        print(f"Data read from S3: {df.head()}")
-        return df.to_dict(orient='records')
-    except Exception as e:
-        print(f"Error reading data from S3: {str(e)}")
+        print(f"Error executing Athena query: {str(e)}")
         return []

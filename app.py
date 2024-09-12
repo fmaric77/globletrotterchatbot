@@ -19,7 +19,7 @@ try:
     from weathertools2 import recommend_best_time_to_visit
     from wikipediatools import get_city_highlights, get_sport_clubs_info,get_sportsman_info
     from wikipediatools2 import get_best_travel_package
-    from gluetools import get_glue_catalog_database
+    from gluetools import query_athena
 except ImportError as e:
     logging.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
@@ -36,7 +36,7 @@ tools = [
     get_sportsman_info,
     recommend_best_time_to_visit,
     get_best_travel_package,
-    get_glue_catalog_database
+    query_athena
 ]
 
 # Ensure AWS_DEFAULT_REGION is set
