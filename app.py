@@ -36,10 +36,11 @@ athena_client = boto3.client(
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
+stored_data = []
 
 @tool
-def query_athena(query: str) -> list:
-    """Execute a query in Athena and return the results as a list of dictionaries."""
+def query_athena(query: str) -> str:
+    """Execute a query in Athena and return the results as a formatted string."""
     try:
         # Set the Athena parameters
         database = os.getenv('ATHENA_DATABASE')
@@ -73,15 +74,34 @@ def query_athena(query: str) -> list:
         column_info = rows[0]['Data']
         columns = [col['VarCharValue'] for col in column_info]
         
-        # Extract the data rows
-        data = []
+        # Extract the data rows and store them in the global variable
+        global stored_data
+        stored_data = []
         for row in rows[1:]:
-            data.append({columns[i]: row['Data'][i]['VarCharValue'] for i in range(len(columns))})
+            row_data = {columns[i]: row['Data'][i]['VarCharValue'] for i in range(len(columns))}
+            stored_data.append(row_data)
         
-        return data
+        return "Query executed and data stored successfully."
     except Exception as e:
-        print(f"Error executing Athena query: {str(e)}")
-        return []
+        logging.error(f"Error executing Athena query: {str(e)}")
+        return f"An error occurred while executing the query: {str(e)}"
+
+def get_athena_query_results(query: str) -> str:
+    """Get the results of an Athena query and return them as a message. Example query: SELECT * FROM "globetrotters_datalake"."coaches" limit 10;"""
+    result = query_athena(query)
+    return f"Query results:\n{result}"
+
+def answer_question(question: str) -> str:
+    """Answer a question based on the stored Athena query results."""
+    if not stored_data:
+        return "No data available. Please run a query first."
+    
+    # Example: Implement a simple question-answering logic
+    if "count" in question.lower():
+        return f"There are {len(stored_data)} rows in the data."
+    
+    # Add more question-answering logic as needed
+    return "Question answering not implemented for this type of question."
 
 # Define tools
 tools = [
