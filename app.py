@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 import os
 import logging
 import sys
+import boto3
+import time
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -17,15 +19,69 @@ logging.basicConfig(level=logging.DEBUG)
 try:
     from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
     from weathertools2 import recommend_best_time_to_visit
-    from wikipediatools import get_city_highlights, get_sport_clubs_info,get_sportsman_info
+    from wikipediatools import get_city_highlights, get_sport_clubs_info, get_sportsman_info
     from wikipediatools2 import get_best_travel_package
-    from gluetools import query_athena
 except ImportError as e:
     logging.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
 
 # Load environment variables
 load_dotenv()
+
+# Initialize the Athena client
+athena_client = boto3.client(
+    'athena',
+    region_name=os.getenv('AWS_DEFAULT_REGION'),
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+)
+
+@tool
+def query_athena(query: str) -> list:
+    """Execute a query in Athena and return the results as a list of dictionaries."""
+    try:
+        # Set the Athena parameters
+        database = os.getenv('ATHENA_DATABASE')
+        output_location = os.getenv('ATHENA_OUTPUT_LOCATION')
+        
+        # Start the query execution
+        response = athena_client.start_query_execution(
+            QueryString=query,
+            QueryExecutionContext={'Database': database},
+            ResultConfiguration={'OutputLocation': output_location}
+        )
+        
+        query_execution_id = response['QueryExecutionId']
+        
+        # Wait for the query to complete
+        while True:
+            query_status = athena_client.get_query_execution(QueryExecutionId=query_execution_id)
+            status = query_status['QueryExecution']['Status']['State']
+            if status in ['SUCCEEDED', 'FAILED', 'CANCELLED']:
+                break
+            time.sleep(2)
+        
+        if status != 'SUCCEEDED':
+            raise Exception(f"Query failed with status: {status}")
+        
+        # Get the query results
+        results = athena_client.get_query_results(QueryExecutionId=query_execution_id)
+        rows = results['ResultSet']['Rows']
+        
+        # Extract the column names
+        column_info = rows[0]['Data']
+        columns = [col['VarCharValue'] for col in column_info]
+        
+        # Extract the data rows
+        data = []
+        for row in rows[1:]:
+            data.append({columns[i]: row['Data'][i]['VarCharValue'] for i in range(len(columns))})
+        
+        return data
+    except Exception as e:
+        print(f"Error executing Athena query: {str(e)}")
+        return []
+
 # Define tools
 tools = [
     get_current_weather,
@@ -61,8 +117,6 @@ prompt = ChatPromptTemplate.from_messages([
 
 # Initialize memory for chat history
 memory = ChatMessageHistory()
-
-
 
 # Create agent and executor
 agent_executor = None
