@@ -1,0 +1,862 @@
+country,discipline,Count
+Australia,Swimming,71
+United States of America,Swimming,59
+United States of America,Athletics,51
+Finland,Ice Hockey,48
+United States of America,Baseball/Softball,39
+Japan,Baseball/Softball,39
+United States,Athletics,34
+France,Handball,33
+Japan,Judo,31
+France,Judo,28
+United States,Swimming,28
+New Zealand,Rugby Sevens,27
+Fiji,Rugby Sevens,27
+New Zealand,Rowing,27
+Hungary,Water Polo,26
+France,Basketball,26
+Slovakia,Ice Hockey,25
+ROC,Ice Hockey,25
+Jamaica,Athletics,25
+Great Britain,Swimming,25
+United States of America,Basketball,24
+Dominican Republic,Baseball/Softball,24
+Canada,Ice Hockey,23
+Brazil,Football,23
+Canada,Swimming,23
+Great Britain,Cycling Track,23
+Spain,Football,23
+United States of America,Ice Hockey,23
+Mexico,Football,22
+Netherlands,Rowing,22
+Great Britain,Athletics,22
+Canada,Football,22
+Sweden,Football,22
+United States of America,Football,22
+France,Fencing,21
+Kenya,Athletics,21
+Great Britain,Rowing,21
+Norway,Biathlon,20
+Poland,Athletics,20
+Argentina,Hockey,19
+ROC,Fencing,19
+India,Hockey,19
+ROC,Cross-Country Skiing,19
+Italy,Fencing,19
+Germany,Bobsleigh,18
+Japan,Wrestling,18
+Belgium,Hockey,18
+Australia,Hockey,18
+Italy,Swimming,18
+Netherlands,Hockey,18
+Netherlands,Athletics,18
+Hungary,Canoe Sprint,17
+Republic of Korea,Fencing,17
+Australia,Rowing,17
+Spain,Handball,17
+Denmark,Handball,17
+People's Republic of China,Diving,16
+Norway,Handball,16
+Great Britain,Hockey,16
+ROC,Handball,15
+People's Republic of China,Rowing,15
+Netherlands,Speed Skating,15
+Canada,Baseball/Softball,15
+Germany,Judo,15
+Great Britain,Equestrian,14
+Canada,Athletics,14
+Netherlands,Cycling Track,14
+People's Republic of China,Swimming,14
+Spain,Water Polo,14
+Israel,Judo,14
+Serbia,Water Polo,14
+ROC,Figure Skating,14
+ROC,Artistic Gymnastics,14
+Greece,Water Polo,13
+Australia,Basketball,13
+France,Biathlon,13
+People's Republic of China,Shooting,13
+Brazil,Volleyball,13
+Argentina,Rugby Sevens,13
+United States of America,Water Polo,13
+ROC,Biathlon,13
+Germany,Rowing,13
+France,Volleyball,13
+Romania,Rowing,13
+France,Rugby Sevens,13
+People's Republic of China,Short Track Speed Skating,12
+Argentina,Volleyball,12
+Italy,Short Track Speed Skating,12
+Norway,Cross-Country Skiing,12
+Austria,Alpine Skiing,12
+People's Republic of China,Table Tennis,12
+United States of America,Volleyball,12
+Sweden,Curling,12
+Serbia,Volleyball,12
+United States of America,Figure Skating,12
+Republic of Korea,Short Track Speed Skating,12
+China,Swimming,12
+ROC,Volleyball,12
+Japan,Artistic Gymnastics,12
+Canada,Rowing,12
+Germany,Canoe Sprint,12
+Japan,Basketball,12
+Japan,Figure Skating,11
+Germany,Luge,11
+Germany,Equestrian,11
+China,Diving,11
+Italy,Athletics,11
+People's Republic of China,Artistic Gymnastics,11
+Japan,Table Tennis,11
+United States of America,Freestyle Skiing,10
+Ukraine,Artistic Swimming,10
+ROC,Swimming,10
+ROC,Shooting,10
+ROC,Artistic Swimming,10
+Great Britain,Sailing,10
+Great Britain,Curling,10
+Slovenia,Ski Jumping,10
+Australia,Athletics,10
+People's Republic of China,Artistic Swimming,10
+People's Republic of China,Badminton,10
+China,Shooting,10
+Australia,Cycling Track,10
+Italy,Rowing,10
+Denmark,Cycling Track,9
+Hungary,Fencing,9
+Republic of Korea,Archery,9
+Japan,Fencing,9
+United States,Artistic Gymnastics,9
+United States of America,Wrestling,9
+Great Britain,Triathlon,9
+China,Artistic Gymnastics,9
+Japan,Skateboarding,9
+United States of America,Artistic Gymnastics,9
+Norway,Alpine Skiing,9
+Switzerland,Alpine Skiing,9
+Great Britain,Diving,9
+Ethiopia,Athletics,8
+People's Republic of China,Weightlifting,8
+Kyrgyzstan,Wrestling,8
+Sweden,Cross-Country Skiing,8
+United States of America,Shooting,8
+IR Iran,Wrestling,8
+Italy,Cycling Track,8
+Ireland,Rowing,8
+Germany,Cycling Track,8
+France,Swimming,8
+Cuba,Wrestling,8
+Canada,Short Track Speed Skating,8
+ROC,3x3 Basketball,8
+ROC,Wrestling,8
+Netherlands,Sailing,8
+People's Republic of China,Freestyle Skiing,8
+Japan,Speed Skating,7
+Spain,Canoe Sprint,7
+Germany,Athletics,7
+Dominican Republic,Athletics,7
+Sweden,Biathlon,7
+Finland,Cross-Country Skiing,7
+Korea,Archery,7
+New Zealand,Cycling Track,7
+Netherlands,Short Track Speed Skating,7
+New Zealand,Canoe Sprint,7
+Austria,Luge,7
+Norway,Nordic Combined,7
+United States,Wrestling,7
+Ukraine,Wrestling,7
+Georgia,Judo,7
+Canada,Snowboard,7
+Italy,Rhythmic Gymnastics,7
+Canada,Freestyle Skiing,7
+Hungary,Short Track Speed Skating,7
+Cuba,Boxing,7
+Great Britain,Artistic Gymnastics,7
+Great Britain,Boxing,7
+Canada,Speed Skating,7
+Brazil,Artistic Gymnastics,6
+Korea,Shooting,6
+Bulgaria,Rhythmic Gymnastics,6
+Botswana,Athletics,6
+Azerbaijan,Wrestling,6
+Norway,Athletics,6
+Uzbekistan,Boxing,6
+Poland,Canoe Sprint,6
+Germany,Ski Jumping,6
+Germany,Sailing,6
+Uganda,Athletics,6
+Brazil,Judo,6
+ROC,Boxing,6
+ROC,Rhythmic Gymnastics,6
+Germany,Cross-Country Skiing,6
+France,Sailing,6
+Germany,Canoe Slalom,6
+China,Table Tennis,6
+France,Triathlon,6
+France,Cycling Track,6
+United States of America,Speed Skating,6
+United States of America,Equestrian,6
+United States of America,Cycling Track,6
+Australia,Canoe Slalom,5
+France,Equestrian,5
+Netherlands,Cycling Road,5
+Norway,Speed Skating,5
+Estonia,Fencing,5
+Sweden,Sailing,5
+Croatia,Tennis,5
+Korea,Judo,5
+Germany,Biathlon,5
+People's Republic of China,Athletics,5
+People's Republic of China,Canoe Sprint,5
+Italy,Shooting,5
+Canada,Canoe Sprint,5
+China,Weightlifting,5
+Germany,Nordic Combined,5
+Great Britain,Canoe Slalom,5
+Philippines,Boxing,5
+Poland,Rowing,5
+Canada,Curling,5
+Japan,Curling,5
+Germany,Alpine Skiing,5
+ROC,Tennis,5
+Japan,Nordic Combined,5
+United States,Shooting,5
+Brazil,Skateboarding,5
+Belgium,Cycling Road,5
+Belgium,Athletics,5
+Spain,Athletics,5
+Austria,Ski Jumping,5
+United States of America,Diving,5
+China,Wrestling,5
+Canada,Bobsleigh,5
+United States of America,Snowboard,5
+Australia,Equestrian,5
+Australia,Sailing,5
+United States of America,Triathlon,5
+China,Boxing,5
+China,Badminton,5
+United States of America,Fencing,5
+Hungary,Swimming,5
+Kosovo,Judo,4
+Malaysia,Badminton,4
+Japan,Swimming,4
+Sweden,Athletics,4
+New Zealand,Athletics,4
+People's Republic of China,3x3 Basketball,4
+Mongolia,Judo,4
+Netherlands,Swimming,4
+Sweden,Freestyle Skiing,4
+France,Rowing,4
+France,Cross-Country Skiing,4
+Brazil,Athletics,4
+Belarus,Canoe Sprint,4
+New Zealand,Sailing,4
+Slovakia,Canoe Sprint,4
+Latvia,3x3 Basketball,4
+Latvia,Luge,4
+Spain,Sailing,4
+Uzbekistan,Judo,4
+United States of America,Boxing,4
+United States of America,Bobsleigh,4
+Australia,Canoe Sprint,4
+ROC,Archery,4
+Italy,Alpine Skiing,4
+Islamic Republic of Iran,Wrestling,4
+ROC,Cycling Track,4
+"Hong Kong, China",Swimming,4
+Turkey,Karate,4
+Austria,Snowboard,4
+Ecuador,Weightlifting,4
+South Africa,Swimming,4
+Italy,Artistic Gymnastics,4
+Ukraine,Athletics,4
+Great Britain,Taekwondo,4
+Ukraine,Canoe Sprint,4
+Germany,Swimming,4
+Croatia,Rowing,4
+Chinese Taipei,Badminton,4
+Chinese Taipei,Boxing,4
+Germany,Diving,4
+Italy,Weightlifting,4
+Japan,Badminton,4
+Brazil,Boxing,4
+ROC,Taekwondo,4
+Republic of Korea,Speed Skating,4
+Japan,Archery,4
+Mexico,Diving,4
+Sweden,Equestrian,4
+United States,Fencing,4
+Germany,Table Tennis,4
+Switzerland,Cycling Mountain Bike,4
+Switzerland,Shooting,4
+Switzerland,Freestyle Skiing,4
+People's Republic of China,Wrestling,4
+ROC,Speed Skating,4
+Indonesia,Badminton,4
+Indonesia,Weightlifting,4
+Bulgaria,Wrestling,4
+IR Iran,Taekwondo,4
+China,Athletics,4
+ROC,Ski Jumping,4
+Italy,Sailing,4
+Canada,Ski Jumping,4
+Germany,Archery,4
+Kazakhstan,Boxing,4
+Serbia,3x3 Basketball,4
+United States of America,3x3 Basketball,4
+Georgia,Wrestling,4
+Uzbekistan,Wrestling,3
+Netherlands,Cycling BMX Racing,3
+Uzbekistan,Taekwondo,3
+Austria,Sport Climbing,3
+Australia,Boxing,3
+Armenia,Wrestling,3
+Czech Republic,Tennis,3
+Denmark,Canoe Sprint,3
+Spain,Tennis,3
+Austria,Judo,3
+Azerbaijan,Judo,3
+Mexico,Archery,3
+Japan,Sport Climbing,3
+Japan,Snowboard,3
+Korea,Taekwondo,3
+Serbia,Shooting,3
+Serbia,Taekwondo,3
+France,Alpine Skiing,3
+Cuba,Canoe Sprint,3
+France,Taekwondo,3
+France,Cycling BMX Racing,3
+France,Canoe Slalom,3
+France,Boxing,3
+Belgium,Equestrian,3
+Australia,Tennis,3
+Bahrain,Athletics,3
+United States,Skateboarding,3
+Republic of Korea,Judo,3
+People's Republic of China,Trampoline Gymnastics,3
+Cuba,Athletics,3
+Republic of Korea,Taekwondo,3
+Japan,Karate,3
+Georgia,Weightlifting,3
+Italy,Speed Skating,3
+Italy,Snowboard,3
+Korea,Fencing,3
+San Marino,Shooting,3
+Belarus,Wrestling,3
+Brazil,Surfing,3
+Germany,Wrestling,3
+Sweden,Swimming,3
+Japan,Boxing,3
+Croatia,Taekwondo,3
+Kazakhstan,Judo,3
+Japan,Athletics,3
+Switzerland,Beach Volleyball,3
+Germany,Skeleton,3
+Ireland,Swimming,3
+Canada,Diving,3
+Ukraine,Shooting,3
+Ukraine,Fencing,3
+Switzerland,Tennis,3
+Switzerland,Swimming,3
+Chinese Taipei,Weightlifting,3
+Colombia,Weightlifting,3
+India,Wrestling,3
+India,Shooting,3
+Chinese Taipei,Archery,3
+ROC,Rowing,3
+Tunisia,Taekwondo,3
+Thailand,Weightlifting,3
+Türkiye,Boxing,3
+Turkey,Wrestling,3
+Italy,Judo,3
+"Hong Kong, China",Fencing,3
+Grenada,Athletics,3
+Great Britain,Shooting,3
+Great Britain,Cycling BMX Freestyle,3
+Portugal,Athletics,3
+Canada,Judo,3
+Ireland,Boxing,3
+Greece,Athletics,3
+Greece,Rowing,3
+ROC,Judo,3
+Hungary,Marathon Swimming,3
+ROC,Freestyle Skiing,3
+"Hong Kong, China",Table Tennis,3
+Australia,Skateboarding,3
+Norway,Beach Volleyball,3
+United States of America,Golf,2
+United States of America,Cross-Country Skiing,2
+United States of America,Skateboarding,2
+Australia,Marathon Swimming,2
+Australia,Snowboard,2
+United States of America,Beach Volleyball,2
+Netherlands,Marathon Swimming,2
+New Zealand,Tennis,2
+New Zealand,Triathlon,2
+Australia,Cycling BMX Freestyle,2
+Australia,Cycling Road,2
+Australia,Diving,2
+Ecuador,Athletics,2
+Spain,Boxing,2
+Spain,Canoe Slalom,2
+Spain,Karate,2
+ROC,Athletics,2
+ROC,Beach Volleyball,2
+ROC,Diving,2
+Israel,Artistic Gymnastics,2
+Israel,Rhythmic Gymnastics,2
+Israel,Sailing,2
+Italy,Archery,2
+Ukraine,Boxing,2
+Hungary,Modern Pentathlon,2
+Great Britain,Trampoline Gymnastics,2
+Canada,Weightlifting,2
+Bulgaria,Weightlifting,2
+Qatar,Beach Volleyball,2
+Hungary,Wrestling,2
+India,Athletics,2
+Poland,Sailing,2
+Poland,Sport Climbing,2
+Portugal,Cycling Track,2
+Portugal,Judo,2
+Puerto Rico,Athletics,2
+Qatar,Athletics,2
+Great Britain,Cycling BMX Racing,2
+Great Britain,Cycling Mountain Bike,2
+Great Britain,Modern Pentathlon,2
+Great Britain,Skateboarding,2
+China,Canoe Sprint,2
+Turkey,Boxing,2
+Turkey,Taekwondo,2
+Türkiye,Wrestling,2
+Thailand,Taekwondo,2
+China,Artistic Swimming,2
+ROC,Short Track Speed Skating,2
+Great Britain,Weightlifting,2
+Greece,Artistic Gymnastics,2
+Guatemala,Shooting,2
+Italy,Canoe Sprint,2
+Italy,Curling,2
+Italy,Cycling Road,2
+Italy,Karate,2
+Italy,Marathon Swimming,2
+Canada,Cycling Track,2
+Ukraine,Karate,2
+Chinese Taipei,Table Tennis,2
+Colombia,Athletics,2
+Colombia,Cycling BMX Racing,2
+Chinese Taipei,Artistic Gymnastics,2
+Tajikistan,Judo,2
+Thailand,Boxing,2
+Ukraine,Swimming,2
+United States,Archery,2
+United States,Basketball,2
+Brazil,Canoe Sprint,2
+Kazakhstan,Karate,2
+People's Republic of China,Snowboard,2
+Philippines,Artistic Gymnastics,2
+Republic of Korea,Artistic Gymnastics,2
+Republic of Korea,Badminton,2
+Republic of Moldova,Canoe Sprint,2
+Republic of Moldova,Judo,2
+Sweden,Speed Skating,2
+Sweden,Table Tennis,2
+China,Sport Climbing,2
+China,Taekwondo,2
+China,Tennis,2
+China,Trampoline Gymnastics,2
+Germany,Marathon Swimming,2
+Japan,Golf,2
+Italy,Taekwondo,2
+Italy,Tennis,2
+Brazil,Sailing,2
+Brazil,Swimming,2
+Brazil,Tennis,2
+Bulgaria,Boxing,2
+United States,Cycling Road,2
+United States,Cycling Track,2
+United States,Rowing,2
+Jordan,Taekwondo,2
+United States,Tennis,2
+United States,Volleyball,2
+United States,Weightlifting,2
+Kazakhstan,Wrestling,2
+Korea,Badminton,2
+Romania,Swimming,2
+Saint Lucia,Athletics,2
+France,Archery,2
+France,Athletics,2
+Cuba,Taekwondo,2
+Czech Republic,Athletics,2
+Czech Republic,Canoe Slalom,2
+Czech Republic,Canoe Sprint,2
+Czech Republic,Shooting,2
+France,Cycling Mountain Bike,2
+France,Cycling Road,2
+France,Figure Skating,2
+France,Shooting,2
+France,Surfing,2
+France,Table Tennis,2
+Korea,Table Tennis,2
+Japan,Ski Jumping,2
+Japan,Surfing,2
+People's Republic of China,Boxing,2
+People's Republic of China,Cycling Track,2
+People's Republic of China,Figure Skating,2
+People's Republic of China,Karate,2
+People's Republic of China,Sailing,2
+Kazakhstan,Weightlifting,2
+Belgium,Judo,2
+United States,Sport Climbing,2
+Bahamas,Athletics,2
+Australia,Surfing,2
+Austria,Sailing,2
+South Africa,Athletics,2
+Egypt,Karate,2
+Egypt,Modern Pentathlon,2
+Egypt,Taekwondo,2
+Denmark,Rowing,2
+Denmark,Sailing,2
+Dominican Republic,Boxing,2
+Dominican Republic,Weightlifting,2
+DPR Korea,Diving,2
+DPR Korea,Wrestling,2
+Denmark,Badminton,2
+Spain,Shooting,2
+Norway,Curling,2
+Norway,Sailing,2
+Azerbaijan,Boxing,2
+Azerbaijan,Karate,2
+Slovakia,Canoe Slalom,2
+Slovenia,Cycling Road,2
+Slovenia,Judo,2
+Slovenia,Snowboard,2
+Slovenia,Sport Climbing,2
+Morocco,Athletics,2
+Netherlands,Archery,2
+Netherlands,Equestrian,2
+United States of America,Weightlifting,2
+New Zealand,Golf,2
+New Zealand,Snowboard,2
+Albania,Wrestling,2
+AIN,Trampoline Gymnastics,2
+Czechia,Canoe Sprint,2
+Côte d'Ivoire,Taekwondo,2
+Armenia,Artistic Gymnastics,2
+Armenia,Weightlifting,2
+Uzbekistan,Weightlifting,2
+Australia,Beach Volleyball,2
+Venezuela,Weightlifting,2
+Zambia,Athletics,1
+Algeria,Athletics,1
+Algeria,Boxing,1
+Argentina,Cycling BMX Freestyle,1
+Argentina,Sailing,1
+Armenia,Boxing,1
+United States of America,Karate,1
+United States of America,Sport Climbing,1
+United States of America,Surfing,1
+Austria,Cycling Road,1
+Austria,Cross-Country Skiing,1
+Austria,Athletics,1
+Australia,Water Polo,1
+Belarus,Trampoline Gymnastics,1
+Belarus,Rhythmic Gymnastics,1
+Belarus,Freestyle Skiing,1
+Belarus,Biathlon,1
+Belarus,Athletics,1
+Bahrain,Wrestling,1
+Bahrain,Weightlifting,1
+Azerbaijan,Taekwondo,1
+United States of America,Alpine Skiing,1
+United States,Water Polo,1
+United States,Triathlon,1
+United States,Taekwondo,1
+Lithuania,Breaking,1
+Lithuania,Athletics,1
+Lithuania,3x3 Basketball,1
+Latvia,Weightlifting,1
+Kyrgyzstan,Boxing,1
+Netherlands,Boxing,1
+Netherlands,Artistic Swimming,1
+Netherlands,3x3 Basketball,1
+Namibia,Athletics,1
+Morocco,Football,1
+Mongolia,Wrestling,1
+Mexico,Weightlifting,1
+Mexico,Judo,1
+Panama,Boxing,1
+Pakistan,Athletics,1
+Norway,Wrestling,1
+People's Republic of China,Speed Skating,1
+Kazakhstan,Shooting,1
+Kazakhstan,Artistic Gymnastics,1
+Jordan,Karate,1
+Japan,Weightlifting,1
+Kuwait,Shooting,1
+Korea,Weightlifting,1
+Korea,Swimming,1
+Korea,Modern Pentathlon,1
+Korea,Boxing,1
+People's Republic of China,Skeleton,1
+People's Republic of China,Fencing,1
+Mexico,Boxing,1
+Malaysia,Cycling Track,1
+Lithuania,Rowing,1
+Lithuania,Modern Pentathlon,1
+Poland,Fencing,1
+Poland,Cycling Track,1
+Italy,Wrestling,1
+Italy,Volleyball,1
+Japan,Sailing,1
+Japan,Modern Pentathlon,1
+Japan,Freestyle Skiing,1
+Japan,Equestrian,1
+Japan,Diving,1
+Japan,Cycling Track,1
+Japan,Breaking,1
+Poland,Canoe Slalom,1
+Poland,Boxing,1
+Philippines,Weightlifting,1
+Peru,Sailing,1
+People's Republic of China,Taekwondo,1
+Italy,Boxing,1
+Italy,Biathlon,1
+Israel,Taekwondo,1
+Islamic Republic of Iran,Weightlifting,1
+Islamic Republic of Iran,Shooting,1
+Islamic Republic of Iran,Karate,1
+Italy,Modern Pentathlon,1
+Italy,Luge,1
+Italy,Cross-Country Skiing,1
+Italy,Canoe Slalom,1
+Puerto Rico,Wrestling,1
+Portugal,Canoe Sprint,1
+Poland,Wrestling,1
+Poland,Volleyball,1
+Poland,Tennis,1
+Poland,Ski Jumping,1
+Greece,Wrestling,1
+Greece,Swimming,1
+Greece,Judo,1
+Hungary,Taekwondo,1
+Hungary,Shooting,1
+Hungary,Sailing,1
+Hungary,Karate,1
+Hungary,Judo,1
+Hungary,Athletics,1
+"Hong Kong, China",Karate,1
+Qatar,Weightlifting,1
+Ireland,Artistic Gymnastics,1
+Indonesia,Sport Climbing,1
+India,Weightlifting,1
+India,Boxing,1
+India,Badminton,1
+Germany,Handball,1
+Germany,Golf,1
+Germany,Freestyle Skiing,1
+Germany,Football,1
+Great Britain,Canoe Sprint,1
+Great Britain,Artistic Swimming,1
+Ghana,Boxing,1
+Germany,Triathlon,1
+Germany,Tennis,1
+ROC,Snowboard,1
+ROC,Luge,1
+Great Britain,Sport Climbing,1
+Great Britain,Judo,1
+Great Britain,Golf,1
+Great Britain,Cycling Road,1
+"Hong Kong, China",Cycling Track,1
+France,Modern Pentathlon,1
+France,Karate,1
+France,Freestyle Skiing,1
+France,Football,1
+Germany,Boxing,1
+Germany,Beach Volleyball,1
+Germany,Artistic Gymnastics,1
+Germany,3x3 Basketball,1
+Georgia,Boxing,1
+Romania,Fencing,1
+Romania,Artistic Gymnastics,1
+Republic of Moldova,Wrestling,1
+Republic of Korea,Shooting,1
+Republic of Korea,Modern Pentathlon,1
+Germany,Rhythmic Gymnastics,1
+Germany,Hockey,1
+Slovenia,Canoe Slalom,1
+Slovenia,Alpine Skiing,1
+Slovakia,Shooting,1
+Slovakia,Golf,1
+Slovakia,Alpine Skiing,1
+France,Cycling BMX Freestyle,1
+France,Breaking,1
+Singapore,Sailing,1
+Serbia,Wrestling,1
+Serbia,Tennis,1
+Serbia,Karate,1
+Serbia,Basketball,1
+Saudi Arabia,Karate,1
+San Marino,Wrestling,1
+Romania,Weightlifting,1
+France,Snowboard,1
+EOR,Boxing,1
+Dominica,Athletics,1
+Denmark,Wrestling,1
+Denmark,Taekwondo,1
+Denmark,Swimming,1
+Denmark,Shooting,1
+France,3x3 Basketball,1
+Finland,Swimming,1
+Finland,Boxing,1
+Estonia,Freestyle Skiing,1
+Egypt,Wrestling,1
+Egypt,Weightlifting,1
+Egypt,Fencing,1
+Ecuador,Wrestling,1
+South Africa,Cycling Mountain Bike,1
+Slovenia,Sailing,1
+Denmark,Equestrian,1
+DPR Korea,Table Tennis,1
+DPR Korea,Boxing,1
+Czechia,Tennis,1
+Czechia,Fencing,1
+Czechia,Athletics,1
+Czech Republic,Speed Skating,1
+Czech Republic,Snowboard,1
+Spain,Judo,1
+Spain,Cycling Mountain Bike,1
+Spain,Artistic Swimming,1
+Spain,Artistic Gymnastics,1
+Spain,3x3 Basketball,1
+South Africa,Surfing,1
+South Africa,Rugby Sevens,1
+Ecuador,Cycling Road,1
+Switzerland,Cycling BMX Racing,1
+Switzerland,Cycling BMX Freestyle,1
+Sweden,Shooting,1
+Sweden,Judo,1
+Czech Republic,Judo,1
+Czech Republic,Fencing,1
+Cyprus,Sailing,1
+Cuba,Shooting,1
+Cuba,Judo,1
+Croatia,Water Polo,1
+Sweden,Cycling Mountain Bike,1
+Sweden,Beach Volleyball,1
+Sweden,Alpine Skiing,1
+Spain,Taekwondo,1
+Spain,Sport Climbing,1
+Spain,Snowboard,1
+Switzerland,Snowboard,1
+Chinese Taipei,Karate,1
+Chinese Taipei,Judo,1
+Chinese Taipei,Golf,1
+Croatia,Shooting,1
+Croatia,Sailing,1
+Croatia,Judo,1
+Croatia,Athletics,1
+Croatia,Artistic Gymnastics,1
+Colombia,Wrestling,1
+Colombia,Artistic Gymnastics,1
+Chinese Taipei,Taekwondo,1
+Chinese Taipei,Shooting,1
+Switzerland,Rowing,1
+Switzerland,Equestrian,1
+Switzerland,Cycling Road,1
+China,Judo,1
+China,Hockey,1
+China,Golf,1
+China,Cycling BMX Freestyle,1
+China,Breaking,1
+China,Archery,1
+Chile,Wrestling,1
+Chile,Shooting,1
+Turkey,Artistic Gymnastics,1
+Turkey,Archery,1
+Tunisia,Swimming,1
+Tunisia,Fencing,1
+Thailand,Badminton,1
+Tajikistan,Boxing,1
+Syrian Arab Republic,Weightlifting,1
+Switzerland,Triathlon,1
+Canada,Beach Volleyball,1
+Canada,Alpine Skiing,1
+Cabo Verde,Boxing,1
+Burkina Faso,Athletics,1
+Bulgaria,Taekwondo,1
+Canada,Trampoline Gymnastics,1
+Canada,Tennis,1
+Canada,Taekwondo,1
+Canada,Rugby Sevens,1
+Canada,Fencing,1
+Ukraine,Artistic Gymnastics,1
+Türkiye,Taekwondo,1
+Türkiye,Shooting,1
+Türkiye,Archery,1
+Turkmenistan,Weightlifting,1
+China,Rhythmic Gymnastics,1
+United States,Canoe Sprint,1
+United States,Canoe Slalom,1
+United States,Breaking,1
+Bulgaria,Shooting,1
+Bulgaria,Karate,1
+Brazil,Taekwondo,1
+Brazil,Marathon Swimming,1
+United States,Boxing,1
+United States,Artistic Swimming,1
+United States,3x3 Basketball,1
+Ukraine,Tennis,1
+Ukraine,Judo,1
+Ukraine,Freestyle Skiing,1
+Ukraine,Cycling Track,1
+Canada,Breaking,1
+Canada,Boxing,1
+United States,Surfing,1
+Brazil,Beach Volleyball,1
+Bermuda,Triathlon,1
+Belgium,Taekwondo,1
+Belgium,Speed Skating,1
+Belgium,Short Track Speed Skating,1
+Belgium,Cycling Track,1
+Belgium,Artistic Gymnastics,1
+United States,Sailing,1
+United States,Rugby Sevens,1
+United States,Golf,1
+United States,Football,1
+United States,Equestrian,1
+United States,Diving,1
+United States,Cycling Mountain Bike,1
+United States,Cycling BMX Freestyle,1
+United States of America,Taekwondo,1
+AIN,Rowing,1
+Venezuela,Cycling BMX Freestyle,1
+Venezuela,Athletics,1
+AIN,Tennis,1
+AIN,Weightlifting,1
+Algeria,Artistic Gymnastics,1
+United States of America,Cycling BMX Freestyle,1
+United States of America,Canoe Sprint,1
+Australia,Skeleton,1
+Australia,Shooting,1
+Australia,Freestyle Skiing,1
+Australia,Cycling BMX Racing,1
+Austria,Rowing,1
+Austria,Nordic Combined,1
+Austria,Karate,1
+Norway,Weightlifting,1
+Norway,Triathlon,1
+Norway,Snowboard,1
+Norway,Ski Jumping,1
+Norway,Rowing,1
+Norway,Freestyle Skiing,1
+New Zealand,Freestyle Skiing,1
+New Zealand,Canoe Slalom,1
+New Zealand,Boxing,1
+Netherlands,Water Polo,1
+Netherlands,Skeleton,1
+Netherlands,Judo,1
+North Macedonia,Taekwondo,1
+Nigeria,Wrestling,1
+Nigeria,Athletics,1
+New Zealand,Trampoline Gymnastics,1
