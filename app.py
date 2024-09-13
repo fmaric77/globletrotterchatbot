@@ -9,9 +9,7 @@ from langchain_community.chat_message_histories import ChatMessageHistory
 from dotenv import load_dotenv
 import os
 import logging
-import sys
 import boto3
-import time
 
 # Import the Athena function and tool from x.py
 from x import query_athena, query_athena_tool
@@ -41,7 +39,7 @@ athena_client = boto3.client(
 stored_data = []
 
 def get_athena_query_results(query: str) -> str:
-    """Get the results of an Athena query and return them as a message. Example query: SELECT * FROM "globetrotters_datalake"."coaches" limit 10;"""
+    """Get the results of an Athena query and return them as a message."""
     result = query_athena(query)
     return f"Query results:\n{result}"
 
@@ -49,12 +47,8 @@ def answer_question(question: str) -> str:
     """Answer a question based on the stored Athena query results."""
     if not stored_data:
         return "No data available. Please run a query first."
-    
-    # Example: Implement a simple question-answering logic
     if "count" in question.lower():
         return f"There are {len(stored_data)} rows in the data."
-    
-    # Add more question-answering logic as needed
     return "Question answering not implemented for this type of question."
 
 # Define tools
@@ -72,7 +66,7 @@ tools = [
 
 # Ensure AWS_DEFAULT_REGION is set
 if 'AWS_DEFAULT_REGION' not in os.environ:
-    os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'  # Set your default region here
+    os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'
 
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
@@ -108,23 +102,26 @@ if chat_model:
 def handle_user_input(user_input):
     if not agent_executor:
         return "Agent executor is not initialized."
+    
+    # Add user input to memory
+    memory.add_message(HumanMessage(content=user_input))
+    
     try:
+        # Invoke the agent with the updated memory
         response = with_message_history.invoke({"input": user_input}, config={"configurable": {"session_id": "stringx"}})
         logging.debug(f"Response from agent: {response}")
+        
         # Extract and format the bot's response
-        bot_response = response.get('output', [])
-        if bot_response and isinstance(bot_response, list) and len(bot_response) > 0:
-            first_response = bot_response[0]
-            if isinstance(first_response, dict) and 'text' in first_response:
-                clean_response = first_response['text']
-            else:
-                clean_response = "Sorry, I couldn't understand the response."
-        else:
-            clean_response = "Sorry, I couldn't understand the response."
-        return clean_response
+        bot_response = response.get('output', '')
+        
     except Exception as e:
         logging.error(f"Error handling user input: {e}")
         return f"An error occurred: {e}"
+    
+    # Add bot response to memory
+    memory.add_message(SystemMessage(content=bot_response))
+    
+    return bot_response
 
 # Streamlit UI
 st.title("Weather and Olympic Data Chatbot")
