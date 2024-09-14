@@ -29,27 +29,13 @@ except ImportError as e:
 # Load environment variables
 load_dotenv()
 
-# Initialize the Athena client
-athena_client = boto3.client(
-    'athena',
-    region_name=os.getenv('AWS_DEFAULT_REGION'),
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-)
-stored_data = []
+# Debugging: Log environment variables
+logging.debug(f"AWS_DEFAULT_REGION: {os.getenv('AWS_DEFAULT_REGION')}")
+logging.debug(f"AWS_ACCESS_KEY_ID: {os.getenv('AWS_ACCESS_KEY_ID')}")
+logging.debug(f"AWS_SECRET_ACCESS_KEY: {os.getenv('AWS_SECRET_ACCESS_KEY')}")
 
-def get_athena_query_results(query: str) -> str:
-    """Get the results of an Athena query and return them as a message."""
-    result = query_athena(query)
-    return f"Query results:\n{result}"
 
-def answer_question(question: str) -> str:
-    """Answer a question based on the stored Athena query results."""
-    if not stored_data:
-        return "No data available. Please run a query first."
-    if "count" in question.lower():
-        return f"There are {len(stored_data)} rows in the data."
-    return "Question answering not implemented for this type of question."
+
 
 # Define tools
 tools = [

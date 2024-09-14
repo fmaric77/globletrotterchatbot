@@ -3,7 +3,9 @@ import os
 import time
 import logging
 from langchain.tools import tool
+from dotenv import load_dotenv
 
+load_dotenv()
 # Initialize the Athena client
 athena_client = boto3.client(
     'athena',
