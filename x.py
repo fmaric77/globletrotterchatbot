@@ -1,67 +1,46 @@
-import boto3
-import os
-import time
-import logging
 from langchain.tools import tool
-from dotenv import load_dotenv
+from x_help import AthenaQueryManager
+import json
 
-load_dotenv()
-# Initialize the Athena client
-athena_client = boto3.client(
-    'athena',
-    region_name=os.getenv('AWS_DEFAULT_REGION'),
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-)
-
-def query_athena(query: str) -> str:
-    """Execute a query in Athena and return the results as a formatted string."""
-    try:
-        # Set the Athena parameters
-        database = os.getenv('ATHENA_DATABASE')
-        output_location = os.getenv('ATHENA_OUTPUT_LOCATION')
-        
-        # Start the query execution
-        response = athena_client.start_query_execution(
-            QueryString=query,
-            QueryExecutionContext={'Database': database},
-            ResultConfiguration={'OutputLocation': output_location}
-        )
-        
-        query_execution_id = response['QueryExecutionId']
-        
-        # Wait for the query to complete
-        while True:
-            query_status = athena_client.get_query_execution(QueryExecutionId=query_execution_id)
-            status = query_status['QueryExecution']['Status']['State']
-            if status in ['SUCCEEDED', 'FAILED', 'CANCELLED']:
-                break
-            time.sleep(2)
-        
-        if status != 'SUCCEEDED':
-            raise Exception(f"Query failed with status: {status}")
-        
-        # Get the query results
-        results = athena_client.get_query_results(QueryExecutionId=query_execution_id)
-        rows = results['ResultSet']['Rows']
-        
-        # Extract the column names
-        column_info = rows[0]['Data']
-        columns = [col['VarCharValue'] for col in column_info]
-        
-        # Extract the data rows and store them in the global variable
-        global stored_data
-        stored_data = []
-        for row in rows[1:]:
-            row_data = {columns[i]: row['Data'][i]['VarCharValue'] for i in range(len(columns))}
-            stored_data.append(row_data)
-        
-        return "Query executed and data stored successfully."
-    except Exception as e:
-        logging.error(f"Error executing Athena query: {str(e)}")
-        return f"An error occurred while executing the query: {str(e)}"
+def format_results(results):
+    if not results:
+        return "No results returned."
+    
+    # Get the column names from the first row
+    columns = list(results[0].keys())
+    
+    # Calculate the maximum width for each column
+    column_widths = {col: max(len(col), max(len(str(row[col])) for row in results)) for col in columns}
+    
+    # Create the header
+    header = " | ".join(col.ljust(column_widths[col]) for col in columns)
+    separator = "-+-".join("-" * column_widths[col] for col in columns)
+    
+    # Create the rows
+    rows = [
+        " | ".join(str(row[col]).ljust(column_widths[col]) for col in columns)
+        for row in results
+    ]
+    
+    # Combine everything
+    table = f"{header}\n{separator}\n" + "\n".join(rows)
+    
+    return table
 
 @tool
 def query_athena_tool(query: str) -> str:
     """Execute a query in Athena and return the results as a formatted string."""
-    return query_athena(query)
+    try:
+        athena_manager = AthenaQueryManager()
+        results = athena_manager.execute_query(query)
+        
+        formatted_results = format_results(results)
+        
+        return f"Query executed successfully. Results:\n\n{formatted_results}"
+    except Exception as e:
+        return f"An error occurred while executing the query: {str(e)}"
+
+# Example usage
+if __name__ == "__main__":
+    query = "SELECT * FROM coaches LIMIT 5"
+    print(query_athena_tool(query))

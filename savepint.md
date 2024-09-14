@@ -1,3 +1,4 @@
+import json
 import streamlit as st
 from langchain_aws import ChatBedrock
 from langchain_core.messages import HumanMessage, AIMessage
@@ -8,6 +9,7 @@ from langchain_community.chat_message_histories import StreamlitChatMessageHisto
 from dotenv import load_dotenv
 import os
 import logging
+import boto3
 import uuid
 
 # Set up logging
@@ -15,7 +17,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Import the Athena function and tool from x.py
-from x import query_athena_tool
+from x import query_athena, query_athena_tool
 
 try:
     from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
@@ -86,7 +88,18 @@ if chat_model:
         logger.error(f"Error creating agent and executor: {e}")
         st.error(f"Error creating agent and executor: {e}")
 
-
+def convert_dict_to_message(message):
+    """Convert a dictionary to a HumanMessage or AIMessage."""
+    if isinstance(message, (HumanMessage, AIMessage)):
+        return message
+    elif isinstance(message, dict):
+        if 'type' in message and ('content' in message or 'text' in message):
+            content = message.get('content', message.get('text', ''))
+            if message['type'] == 'human':
+                return HumanMessage(content=content)
+            elif message['type'] in ['ai', 'assistant']:
+                return AIMessage(content=content)
+    return message
 
 def get_message_content(message):
     """Safely extract content from various message formats."""
@@ -101,25 +114,51 @@ def get_message_content(message):
     else:
         return str(message)
 
+def add_message_to_history(message):
+    """Add a message to the history, ensuring no duplicates and proper formatting."""
+    message = convert_dict_to_message(message)
+    content = get_message_content(message)
+    
+    if not st.session_state.message_history.messages or get_message_content(st.session_state.message_history.messages[-1]) != content:
+        if isinstance(message, (HumanMessage, AIMessage)):
+            st.session_state.message_history.add_message(message)
+        else:
+            # If the message is not a proper Message object, create one based on the type
+            if isinstance(message, dict) and 'type' in message:
+                if message['type'] == 'human':
+                    st.session_state.message_history.add_user_message(content)
+                else:
+                    st.session_state.message_history.add_ai_message(content)
+            else:
+                # Default to adding as a user message if type is unknown
+                st.session_state.message_history.add_user_message(content)
+        
+        logger.debug(f"Added message to history: {type(message).__name__} - {content[:50]}...")
+    else:
+        logger.debug(f"Skipped adding duplicate message: {type(message).__name__} - {content[:50]}...")
 
 def get_memory_contents():
-    """Extract and format memory contents from the message history, prioritizing the latest messages."""
+    """Extract and format memory contents from the message history."""
     memory_contents = []
-    seen_contents = set()
-    
-    # Reverse the order of messages to prioritize the latest ones
-    reversed_messages = reversed(st.session_state.message_history.messages)
-    
-    for msg in reversed_messages:
+    for msg in st.session_state.message_history.messages:
         content = get_message_content(msg)
         if isinstance(content, list) and len(content) > 0 and isinstance(content[0], dict):
             content = content[0].get('text', '')
-        
-        if content not in seen_contents:
-            memory_contents.append(content)
-            seen_contents.add(content)
-    
+        memory_contents.append(content)
     return "\n".join(memory_contents)
+
+def purge_duplicates():
+    """Purge duplicate messages from the message history."""
+    unique_contents = set()
+    unique_messages = []
+    
+    for message in st.session_state.message_history.messages:
+        content = get_message_content(message)
+        if content not in unique_contents:
+            unique_contents.add(content)
+            unique_messages.append(message)
+    
+    st.session_state.message_history.messages = unique_messages
 
 def handle_user_input(user_input):
     if not agent_executor:
@@ -127,6 +166,10 @@ def handle_user_input(user_input):
     
     try:
         # Add user input to history
+        add_message_to_history(HumanMessage(content=user_input))
+        
+        # Purge duplicates from the message history
+        purge_duplicates()
         
         # Prepare the chat history for the model
         chat_history = []
@@ -158,14 +201,15 @@ def handle_user_input(user_input):
         elif isinstance(response, list) and len(response) > 0 and isinstance(response[0], dict):
             bot_response = response[0].get('text', '')
         
-       
+        # If bot_response is valid, add it to the history as an AIMessage
+        if bot_response:
+            add_message_to_history(AIMessage(content=bot_response))
         
     except Exception as e:
         logger.error(f"Error handling user input: {e}")
         return f"An error occurred: {str(e)}"
     
     return bot_response
-
 # Streamlit UI
 st.title("Weather and Olympic Data Chatbot")
 
