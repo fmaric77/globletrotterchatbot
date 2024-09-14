@@ -86,8 +86,6 @@ if chat_model:
         logger.error(f"Error creating agent and executor: {e}")
         st.error(f"Error creating agent and executor: {e}")
 
-
-
 def get_message_content(message):
     """Safely extract content from various message formats."""
     if isinstance(message, (HumanMessage, AIMessage)):
@@ -100,7 +98,6 @@ def get_message_content(message):
         return message[0].get('text', '')
     else:
         return str(message)
-
 
 def get_memory_contents():
     """Extract and format memory contents from the message history, prioritizing the latest messages."""
@@ -127,6 +124,7 @@ def handle_user_input(user_input):
     
     try:
         # Add user input to history
+        st.session_state.message_history.add_message(HumanMessage(content=user_input))
         
         # Prepare the chat history for the model
         chat_history = []
@@ -158,7 +156,8 @@ def handle_user_input(user_input):
         elif isinstance(response, list) and len(response) > 0 and isinstance(response[0], dict):
             bot_response = response[0].get('text', '')
         
-       
+        # Add bot response to history
+        st.session_state.message_history.add_message(AIMessage(content=bot_response))
         
     except Exception as e:
         logger.error(f"Error handling user input: {e}")
@@ -183,13 +182,6 @@ def display_message(image_url, sender, message, is_user=True):
         if isinstance(content, list) and len(content) > 0 and isinstance(content[0], dict):
             content = content[0].get('text', '')
         st.write(f"**{sender}:** {content}", unsafe_allow_html=True)
-
-# Display conversation history
-for message in st.session_state.message_history.messages:
-    if isinstance(message, HumanMessage) or (isinstance(message, dict) and message.get('type') == 'human'):
-        display_message(user_image, "User", message, is_user=True)
-    else:
-        display_message(bot_image, "Bot", message, is_user=False)
 
 user_input = st.text_input("Enter your query:")
 if st.button("Send"):
