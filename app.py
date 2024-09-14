@@ -167,7 +167,7 @@ def handle_user_input(user_input):
     return bot_response
 
 # Streamlit UI
-st.title("Weather and Olympic Data Chatbot")
+st.title("Olympic Travel Chatbot")
 
 # Images for user and bot
 user_image = "images/user.png"
