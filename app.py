@@ -99,6 +99,8 @@ def handle_user_input(user_input):
         
         # Extract and format the bot's response
         bot_response = response.get('output', '')
+        if isinstance(bot_response, list) and len(bot_response) > 0 and 'text' in bot_response[0]:
+            bot_response = bot_response[0]['text']
         
     except Exception as e:
         logging.error(f"Error handling user input: {e}")
