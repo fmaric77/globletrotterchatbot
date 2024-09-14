@@ -29,6 +29,11 @@ except ImportError as e:
 # Load environment variables
 load_dotenv()
 
+# Debugging: Log environment variables
+logging.debug(f"AWS_DEFAULT_REGION: {os.getenv('AWS_DEFAULT_REGION')}")
+logging.debug(f"AWS_ACCESS_KEY_ID: {os.getenv('AWS_ACCESS_KEY_ID')}")
+logging.debug(f"AWS_SECRET_ACCESS_KEY: {os.getenv('AWS_SECRET_ACCESS_KEY')}")
+
 # Initialize the Athena client
 athena_client = boto3.client(
     'athena',
