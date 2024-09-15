@@ -65,7 +65,7 @@ except Exception as e:
 
 # Create agent with updated prompt template
 prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant. Use the tools at your disposal to answer questions. Maintain context from previous messages in the conversation. Remember details about the user that they've shared."),
+    ("system", "You are a helpful assistant specializing in Olympic travel information. Use the tools at your disposal to answer questions. Maintain context from previous messages in the conversation. Remember details about the user that they've shared. If you're unsure about something, you can ask for clarification."),
     ("human", "{input}"),
     ("placeholder", "{agent_scratchpad}")
 ])
@@ -86,6 +86,17 @@ if chat_model:
         logger.error(f"Error creating agent and executor: {e}")
         st.error(f"Error creating agent and executor: {e}")
 
+MAX_HISTORY_LENGTH = 5000  # Maximum number of characters to keep in history
+MAX_INPUT_LENGTH = 1000   # Maximum length for user input
+
+def truncate_history(messages, max_length):
+    """Truncate the message history to a maximum length, keeping the most recent messages."""
+    current_length = sum(len(get_message_content(msg)) for msg in messages)
+    while current_length > max_length and messages:
+        removed_message = messages.pop(0)
+        current_length -= len(get_message_content(removed_message))
+    return messages
+
 def get_message_content(message):
     """Safely extract content from various message formats."""
     if isinstance(message, (HumanMessage, AIMessage)):
@@ -102,42 +113,46 @@ def get_message_content(message):
 def get_memory_contents():
     """Extract and format memory contents from the message history, prioritizing the latest messages."""
     memory_contents = []
-    seen_contents = set()
-    
-    # Reverse the order of messages to prioritize the latest ones
-    reversed_messages = reversed(st.session_state.message_history.messages)
-    
-    for msg in reversed_messages:
+    for msg in st.session_state.message_history.messages:
         content = get_message_content(msg)
-        if isinstance(content, list) and len(content) > 0 and isinstance(content[0], dict):
-            content = content[0].get('text', '')
-        
-        if content not in seen_contents:
-            memory_contents.append(content)
-            seen_contents.add(content)
-    
+        if isinstance(msg, HumanMessage):
+            memory_contents.append(f"Human: {content}")
+        else:
+            memory_contents.append(f"AI: {content}")
     return "\n".join(memory_contents)
+
+def manage_message_history():
+    """Ensure that the message history does not exceed the maximum length."""
+    st.session_state.message_history.messages = truncate_history(
+        st.session_state.message_history.messages, 
+        MAX_HISTORY_LENGTH
+    )
 
 def handle_user_input(user_input):
     if not agent_executor:
         return "Agent executor is not initialized."
     
+    # Truncate user input if it exceeds the maximum length
+    if len(user_input) > MAX_INPUT_LENGTH:
+        user_input = user_input[:MAX_INPUT_LENGTH] + "..."
+    
     try:
         # Add user input to history
         st.session_state.message_history.add_message(HumanMessage(content=user_input))
-        
+        manage_message_history()
+
         # Prepare the chat history for the model
         chat_history = []
         for msg in st.session_state.message_history.messages:
             content = get_message_content(msg)
-            if isinstance(msg, HumanMessage) or (isinstance(msg, dict) and msg.get('type') == 'human'):
+            if isinstance(msg, HumanMessage):
                 chat_history.append((content, None))
             else:
                 chat_history.append((None, content))
         
         # Extract memory contents and include it in the input
         memory_contents = get_memory_contents()
-        full_input = f"{user_input}\n\nMemory Contents:\n{memory_contents}"
+        full_input = f"{user_input}\n\nPrevious Conversation:\n{memory_contents}"
         
         # Invoke the agent with the updated memory
         response = with_message_history.invoke(
@@ -148,7 +163,6 @@ def handle_user_input(user_input):
         
         # Extract and format the bot's response
         bot_response = ''
-        
         if isinstance(response, dict) and 'output' in response:
             bot_response = response['output']
         elif isinstance(response, str):
@@ -158,6 +172,7 @@ def handle_user_input(user_input):
         
         # Add bot response to history
         st.session_state.message_history.add_message(AIMessage(content=bot_response))
+        manage_message_history()
         
     except Exception as e:
         logger.error(f"Error handling user input: {e}")
@@ -193,9 +208,6 @@ if st.button("Send"):
 if st.checkbox("Show Debug Info"):
     st.write(f"Session ID: {st.session_state.session_id}")
     st.write(f"Number of messages in memory: {len(st.session_state.message_history.messages)}")
-    st.write("Memory contents:")
-    for msg in st.session_state.message_history.messages:
-        content = get_message_content(msg)
-        if isinstance(content, list) and len(content) > 0 and isinstance(content[0], dict):
-            content = content[0].get('text', '')
-        st.write(f"- {type(msg).__name__}: {content[:50]}...")
+    st.write("Memory contents (truncated):")
+    memory_contents = get_memory_contents()
+    st.write(memory_contents[:500] + "..." if len(memory_contents) > 500 else memory_contents)
