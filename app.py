@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 # Import the Athena function and tool from x.py
 from x import query_athena_tool
-from prediction_model import predict_tourism_growth,country_with_biggest_tourist_increase
 
 try:
     from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
@@ -24,6 +23,8 @@ try:
     from wikipediatools import get_city_highlights, get_sport_clubs_info, get_sportsman_info
     from wikipediatools2 import get_best_travel_package
     from prediction_model import predict_tourism_growth
+    from prediction_model import predict_tourism_growth,country_with_biggest_tourist_increase
+
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
