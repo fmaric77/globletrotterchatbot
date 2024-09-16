@@ -163,21 +163,21 @@ def handle_user_input(user_input):
         memory_contents = get_memory_contents()
         full_input = f"{user_input}\n\nPrevious Conversation:\n{memory_contents}"
         
-        bot_response = ''
-        def handle_streamed_token(token):
-            nonlocal bot_response
-            bot_response += token
-            st.write(bot_response)
-
         # Invoke the agent with the updated memory
         response = with_message_history.invoke(
             {"input": full_input, "chat_history": chat_history},
-            config={"configurable": {"session_id": st.session_state.session_id}},
-            streaming=True,
-            stream_handler=handle_streamed_token
+            config={"configurable": {"session_id": st.session_state.session_id}}
         )
         logger.debug(f"Response from agent: {response}")
-
+        
+        # Extract and format the bot's response
+        bot_response = ''
+        if isinstance(response, dict) and 'output' in response:
+            bot_response = response['output']
+        elif isinstance(response, str):
+            bot_response = response
+        elif isinstance(response, list) and len(response) > 0 and isinstance(response[0], dict):
+            bot_response = response[0].get('text', '')
         
         # Add bot response to history
         st.session_state.message_history.add_message(AIMessage(content=bot_response))
