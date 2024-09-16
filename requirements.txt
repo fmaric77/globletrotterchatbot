@@ -8,3 +8,5 @@ python-dotenv
 geopy
 scikit-learn
 openpyxl
+pymysql
+psycopg2

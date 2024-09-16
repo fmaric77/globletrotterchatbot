@@ -1,52 +1,28 @@
-from langchain.tools import tool
-
+import psycopg2
 import numpy as np
 import pandas as pd
-import boto3
 from sklearn.model_selection import train_test_split
-import os
 from sklearn.svm import SVR
 from dotenv import load_dotenv
+from langchain.tools import tool
+import os
 
 load_dotenv()
-# Fetch data from the prediction table in Athena
+
+# Fetch data from the prediction table in RDS
 def fetch_data():
-    client = boto3.client(
-        'athena',
-        region_name=os.getenv('AWS_DEFAULT_REGION'),
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-    )
-    query = "SELECT olympics_year, total_medals, tourism_growth FROM prediction"
-    
-    response = client.start_query_execution(
-        QueryString=query,
-        QueryExecutionContext={
-            'Database': os.getenv('ATHENA_DATABASE')  # Replace with your Athena database name
-        },
-        ResultConfiguration={
-            'OutputLocation': os.getenv('ATHENA_OUTPUT_LOCATION')  # Replace with your S3 bucket for query results
-        }
+    connection = psycopg2.connect(
+        host='database-1-instance-1.cj26esgeg1lm.us-east-1.rds.amazonaws.com',
+        user='globetrotter',
+        password='globetrotters',
+        dbname=os.getenv('RDS_DATABASE'),  # Replace with your RDS database name
+        port=5432  # PostgreSQL default port
     )
     
-    query_execution_id = response['QueryExecutionId']
-    
-    # Wait for the query to complete
-    while True:
-        response = client.get_query_execution(QueryExecutionId=query_execution_id)
-        status = response['QueryExecution']['Status']['State']
-        if status in ['SUCCEEDED', 'FAILED', 'CANCELLED']:
-            break
-    
-    if status == 'SUCCEEDED':
-        result = client.get_query_results(QueryExecutionId=query_execution_id)
-        rows = result['ResultSet']['Rows']
-        columns = [col['VarCharValue'] for col in rows[0]['Data']]
-        data = [[col.get('VarCharValue', None) for col in row['Data']] for row in rows[1:]]
-        df = pd.DataFrame(data, columns=columns)
-        return df
-    else:
-        raise Exception(f"Query failed with status: {status}")
+    query = "SELECT olympics_year, total_medals, tourism_growth FROM globetrotters.prediction"
+    df = pd.read_sql(query, connection)
+    connection.close()
+    return df
 
 # Simulated Data: Countries, Medals Won, and Tourist Growth
 df = fetch_data()
@@ -64,13 +40,26 @@ model = SVR(kernel='linear')
 # Train the model
 model.fit(X_train, y_train)
 
-# Path to excel file
-xlsx_file = "Datasets/2024_medal_winners_total.xlsx"
-df_2024 = pd.read_excel(xlsx_file)
+# Fetch 2024 medal data from RDS
+def fetch_medal_data(year):
+    connection = psycopg2.connect(
+        host='database-1-instance-1.cj26esgeg1lm.us-east-1.rds.amazonaws.com',
+        user='globetrotter',
+        password='globetrotters',
+        dbname=os.getenv('RDS_DATABASE'),  # Replace with your RDS database name
+        port=5432  # PostgreSQL default port
+    )
+    
+    query = f"SELECT country, total FROM globetrotters.medal_winners_total"
+    df = pd.read_sql(query, connection)
+    connection.close()
+    return df
+
+df_2024 = fetch_medal_data(2024)
 
 # Extract Countries (NOC) and total medals for 2024
-countries = df_2024['NOC'].tolist()
-total_medals = df_2024['Total'].tolist()
+countries = df_2024['country'].tolist()
+total_medals = df_2024['total'].tolist()
 
 # Create the medals_2024 array for prediction
 medals_2024 = np.array([[2024, medals] for medals in total_medals])
@@ -113,13 +102,12 @@ def country_with_biggest_tourist_increase(year, top_n=1):
     Returns:
         list: The countries with the biggest predicted tourism increase.
     """
-    xlsx_file = "Datasets/2024_medal_winners_total.xlsx"
-    df_2024 = pd.read_excel(xlsx_file)
-    countries = df_2024['NOC'].tolist()
-    total_medals = df_2024['Total'].tolist()
+    df_year = fetch_medal_data(year)
+    countries = df_year['country'].tolist()
+    total_medals = df_year['total'].tolist()
     
-    medals_2024 = np.array([[year, medals] for medals in total_medals])
-    predicted_growth = model.predict(medals_2024)
+    medals_year = np.array([[year, medals] for medals in total_medals])
+    predicted_growth = model.predict(medals_year)
     
     top_indices = np.argsort(predicted_growth)[-top_n:][::-1]
     top_countries = [countries[i] for i in top_indices]

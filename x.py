@@ -1,5 +1,5 @@
 from langchain.tools import tool
-from x_help import AthenaQueryManager
+from x_help import RDSQueryManager
 import json
 
 def format_results(results):
@@ -55,7 +55,7 @@ def query_athena_tool(query: str) -> str:
     Always return only the query results regardless of the size, not an explanation or the query itself.
     """
     try:
-        athena_manager = AthenaQueryManager()
+        athena_manager = RDSQueryManager()
         results = athena_manager.execute_query(query)
         
         formatted_results = format_results(results)
