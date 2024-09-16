@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 import os
 import logging
 import uuid
-
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -21,8 +20,7 @@ try:
     from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
     from weathertools2 import recommend_best_time_to_visit
     from wikipediatools import get_city_highlights, get_sport_clubs_info, get_sportsman_info
-    from wikipediatools2 import get_best_travel_package
-    from prediction_model import predict_tourism_growth
+    from wikipediatools2 import get_best_travel_package,get_tourism_info
     from prediction_model import predict_tourism_growth,country_with_biggest_tourist_increase
 
 except ImportError as e:
@@ -44,7 +42,8 @@ tools = [
     get_best_travel_package,
     query_athena_tool,
     predict_tourism_growth,
-    country_with_biggest_tourist_increase
+    country_with_biggest_tourist_increase,
+    get_tourism_info    
     
 ]
 
