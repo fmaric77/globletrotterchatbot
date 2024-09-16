@@ -7,3 +7,4 @@ langchain_community
 python-dotenv
 geopy
 scikit-learn
+openpyxl
