@@ -12,7 +12,6 @@ import uuid
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
 # Import the Athena function and tool from x.py
 from x import query_athena_tool
 
@@ -218,10 +217,10 @@ if st.button("Send"):
     if response:  # Only display the bot's response if it's not empty
         display_message(bot_image, "Bot", response, is_user=False)
 
-# Debug information
-if st.checkbox("Show Debug Info"):
-    st.write(f"Session ID: {st.session_state.session_id}")
-    st.write(f"Number of messages in memory: {len(st.session_state.message_history.messages)}")
-    st.write("Memory contents (truncated):")
-    memory_contents = get_memory_contents()
-    st.write(memory_contents[:500] + "..." if len(memory_contents) > 500 else memory_contents)
+# # Debug information
+# if st.checkbox("Show Debug Info"):
+#     st.write(f"Session ID: {st.session_state.session_id}")
+#     st.write(f"Number of messages in memory: {len(st.session_state.message_history.messages)}")
+#     st.write("Memory contents (truncated):")
+#     memory_contents = get_memory_contents()
+#     st.write(memory_contents[:500] + "..." if len(memory_contents) > 500 else memory_contents)
