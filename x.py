@@ -29,7 +29,7 @@ def format_results(results):
 
 @tool
 def query_athena_tool(query: str) -> str:
-    """Execute a query in Athena and return only the query results.
+    """Execute a query in Athena and return only the query results Always display the results.
     Select the appropriate table based on the user's query without describing the table or the query logic in the response.
 
     The 'athletes' table contains general data regarding athletes who competed in the 2024 Olympic Games. Use the 'name' column with the name of the athlete, the 'gender' column with the gender of the athlete, the 'country' column with the country of the athlete, the 'disciplines' column which contains a list of sports in which the athlete competed in.
