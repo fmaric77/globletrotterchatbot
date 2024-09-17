@@ -15,16 +15,19 @@ from datetime import datetime
 
 load_dotenv()
 
-# Fetch data from the prediction table in RDS
-def fetch_data():
-    connection = psycopg2.connect(
+# Function to get database connection
+def get_db_connection():
+    return psycopg2.connect(
         host='database-1-instance-1.cj26esgeg1lm.us-east-1.rds.amazonaws.com',
         user='globetrotter',
         password='globetrotters',
         dbname=os.getenv('RDS_DATABASE'),
         port=5432
     )
-    
+
+# Fetch data from the prediction table in RDS
+def fetch_data():
+    connection = get_db_connection()
     query = "SELECT olympics_year, total_medals, tourism_growth FROM globetrotters.prediction"
     df = pd.read_sql(query, connection)
     connection.close()
@@ -32,14 +35,7 @@ def fetch_data():
 
 # Fetch medal data from RDS
 def fetch_medal_data(year):
-    connection = psycopg2.connect(
-        host='database-1-instance-1.cj26esgeg1lm.us-east-1.rds.amazonaws.com',
-        user='globetrotter',
-        password='globetrotters',
-        dbname=os.getenv('RDS_DATABASE'),
-        port=5432
-    )
-    
+    connection = get_db_connection()
     query = f"SELECT country, total FROM globetrotters.medal_winners_total"
     df = pd.read_sql(query, connection)
     connection.close()
@@ -145,9 +141,6 @@ def predict_tourism_growth(total_medals: int) -> float:
     
     return prediction[0]
 
-
-
-    
 @tool
 def country_with_biggest_tourist_increase(input_data: Dict) -> List[str]:
     """
