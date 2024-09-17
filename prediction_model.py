@@ -28,7 +28,7 @@ def get_db_connection():
 # Fetch data from the prediction table in RDS
 def fetch_data():
     connection = get_db_connection()
-    query = "SELECT olympics_year, total_medals, tourism_growth FROM globetrotters.prediction"
+    query = "SELECT olympics_year, total_medals, tourism_growth, country FROM globetrotters.prediction"
     df = pd.read_sql(query, connection)
     connection.close()
     return df
@@ -74,6 +74,7 @@ for i, country in enumerate(countries):
 # Plot total medals vs tourism growth and save the plot
 plt.figure(figsize=(10, 6))
 sns.scatterplot(x=df['total_medals'], y=df['tourism_growth'])
+
 plt.title('Total Medals vs Tourism Growth')
 plt.xlabel('Total Medals')
 plt.ylabel('Tourism Growth (%)')
