@@ -137,7 +137,6 @@ def predict_tourism_growth(total_medals: int) -> float:
     plt.savefig(filename)
     
     # Display the plot in Streamlit
-    st.pyplot(plt)
     
     return prediction[0]
 
