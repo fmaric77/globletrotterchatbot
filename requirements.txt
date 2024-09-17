@@ -10,3 +10,5 @@ scikit-learn
 openpyxl
 pymysql
 psycopg2-binary
+matplotlib
+seaborn

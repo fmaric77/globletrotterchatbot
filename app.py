@@ -10,6 +10,8 @@ import os
 import logging
 import uuid
 
+st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
+
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -23,7 +25,6 @@ try:
     from wikipediatools import get_city_highlights, get_sport_clubs_info, get_sportsman_info
     from wikipediatools2 import get_best_travel_package, get_tourism_info
     from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
-
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
@@ -59,6 +60,11 @@ if 'session_id' not in st.session_state:
 if 'message_history' not in st.session_state:
     st.session_state.message_history = StreamlitChatMessageHistory(key="chat_messages")
 
+# Add initial prompt to explain the bot's functionality
+initial_prompt = "Give example questions"
+if not st.session_state.message_history.messages:
+    st.session_state.message_history.add_message(AIMessage(content=initial_prompt))
+    # Trigger a rerun to ensure the initial prompt is sent 
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
 chat_model = None
@@ -194,8 +200,9 @@ def handle_user_input(user_input):
     
     return bot_response
 
-# Streamlit UI
-st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
+
+# Display banner image
+
 
 # Images for user and bot
 user_image = "images/user.png"
@@ -220,7 +227,7 @@ with st.form(key='user_input_form'):
 if submit_button:
     response = handle_user_input(user_input)
     if response:  # Only display the bot's response if it's not empty
-        display_message(bot_image, "Bot", response, is_user=False)
+        display_message(bot_image, "Globot", response, is_user=False)
 
 # # Debug information
 # if st.checkbox("Show Debug Info"):

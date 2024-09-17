@@ -52,6 +52,10 @@ def query_athena_tool(query: str) -> str:
     For example, if the user asked you to 'list all gold medal winners in diving in the 2024 Olympic Games', you would run the following query:
     SELECT name FROM 'medallists' WHERE medal_type = 'Gold Medal' AND discipline LIKE '%Diving%'
 
+    The 'historic_medals' table contains data regarding all athletes ever to appear in the entire history of the summer Olympic Games. Use the 'Name' column to determine the name of the athlete, the 'Sex' column to determine the gender of the athlete, the 'Team' column to determine from which the athlete came, the 'Year' column to determine in which year the Olympic Games were held, the 'City' column to determine in which city were said Olympic Games held, the 'Sport' column to determine the discpline in which the athlete competed, and the 'Medal' column to determine if the athlete won a medal, and which kind.
+    For example, if the user asked you to 'list all male athletes from Romania who won a silver medal in canoeing in the 1970s', you would run the following query:
+    SELECT Name FROM 'olympic_dataset' WHERE Sex = 'M' AND Team = 'Romania' AND Sport LIKE '%Canoeing%' AND Medal = 'Silver' AND Year BETWEEN 1970 AND 1979
+
     Always return only the query results regardless of the size, not an explanation or the query itself.
     """
     try:
