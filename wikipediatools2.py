@@ -16,7 +16,7 @@ def get_best_travel_package(location: str) -> str:
 
 @tool
 def get_tourism_info(country: str) -> str:
-    """Get tourism information for the specified country using Wikipedia."""
+    """Get tourism information for the specified country using Wikipedia, specifically focusing on tourism statistics tables."""
     tourism_page = f"Tourism_in_{country}"
     summary = fetch_wikipedia_summary(tourism_page)
     if summary == "Page not found.":
@@ -25,3 +25,4 @@ def get_tourism_info(country: str) -> str:
         return f"Tourism information for {country}:\n{summary}"
     else:
         return f"No tourism information available for {country} or API error. Please try again later."
+

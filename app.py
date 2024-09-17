@@ -9,9 +9,11 @@ from dotenv import load_dotenv
 import os
 import logging
 import uuid
+
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
 # Import the Athena function and tool from x.py
 from x import query_athena_tool
 
@@ -19,8 +21,8 @@ try:
     from weathertools import get_current_weather, get_weather_forecast, get_historical_weather
     from weathertools2 import recommend_best_time_to_visit
     from wikipediatools import get_city_highlights, get_sport_clubs_info, get_sportsman_info
-    from wikipediatools2 import get_best_travel_package,get_tourism_info
-    from prediction_model import predict_tourism_growth,country_with_biggest_tourist_increase
+    from wikipediatools2 import get_best_travel_package, get_tourism_info
+    from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
 
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
@@ -42,8 +44,7 @@ tools = [
     query_athena_tool,
     predict_tourism_growth,
     country_with_biggest_tourist_increase,
-    get_tourism_info    
-    
+    get_tourism_info
 ]
 
 # Ensure AWS_DEFAULT_REGION is set
@@ -194,7 +195,7 @@ def handle_user_input(user_input):
     return bot_response
 
 # Streamlit UI
-st.title("Olympic Travel Chatbot")
+st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
 
 # Images for user and bot
 user_image = "images/user.png"
@@ -211,8 +212,12 @@ def display_message(image_url, sender, message, is_user=True):
             content = content[0].get('text', '')
         st.write(f"**{sender}:** {content}", unsafe_allow_html=True)
 
-user_input = st.text_input("Enter your query:")
-if st.button("Send"):
+# Form for user input
+with st.form(key='user_input_form'):
+    user_input = st.text_input("Enter your query:")
+    submit_button = st.form_submit_button(label='Send')
+
+if submit_button:
     response = handle_user_input(user_input)
     if response:  # Only display the bot's response if it's not empty
         display_message(bot_image, "Bot", response, is_user=False)
