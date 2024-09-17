@@ -111,16 +111,10 @@ def predict_tourism_growth(total_medals: int) -> float:
     plt.figure(figsize=(10, 6))
     
     # Scatter plot for historical data
-    sns.scatterplot(x=historical_data['olympics_year'], y=historical_data['tourism_growth'], label='Historical Data')
-    
-    # Line plot for the trend
-    sns.lineplot(x=historical_data['olympics_year'], y=historical_data['tourism_growth'], label='Trend')
+    sns.scatterplot(x=historical_data['total_medals'], y=historical_data['tourism_growth'], label='Historical Data')
     
     # Add the prediction to the plot
-    plt.scatter([next_year], [prediction[0]], color='red', label='Prediction')
-    plt.plot([historical_data['olympics_year'].max(), next_year], 
-             [historical_data['tourism_growth'].iloc[-1], prediction[0]], 
-             color='red', linestyle='--', label='Prediction Trend')
+    plt.scatter([total_medals], [prediction[0]], color='red', label='Prediction')
     
     # Adjust y-axis limits dynamically
     min_growth = min(historical_data['tourism_growth'].min(), prediction[0])
@@ -128,7 +122,7 @@ def predict_tourism_growth(total_medals: int) -> float:
     plt.ylim(min_growth - 5, max_growth + 5)
     
     plt.title(f'Predicted Tourism Growth for {next_year}')
-    plt.xlabel('Olympic Year')
+    plt.xlabel('Total Medals')
     plt.ylabel('Tourism Growth (%)')
     plt.legend()
     
@@ -137,6 +131,7 @@ def predict_tourism_growth(total_medals: int) -> float:
     plt.savefig(filename)
     
     # Display the plot in Streamlit
+    st.image(filename, caption=f'Predicted Tourism Growth for {next_year}')
     
     return prediction[0]
 
