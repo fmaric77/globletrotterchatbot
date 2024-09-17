@@ -48,9 +48,6 @@ tools = [
     get_tourism_info
 ]
 
-# Ensure AWS_DEFAULT_REGION is set
-if 'AWS_DEFAULT_REGION' not in os.environ:
-    os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'
 
 # Initialize session state for memory and session ID
 if 'session_id' not in st.session_state:
