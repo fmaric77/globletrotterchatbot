@@ -6,7 +6,6 @@ from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 from dotenv import load_dotenv
-import os
 import logging
 import uuid
 
