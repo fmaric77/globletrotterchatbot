@@ -203,7 +203,22 @@ def handle_user_input(user_input):
 
 # Display banner image
 
-
+# Display banner image
+st.image("images/banner2.png", use_column_width=True)
+ 
+# Sidebar with bot image and introduction text
+with st.sidebar:
+    st.image("images/bot.png", width=100)
+    st.markdown("""**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**
+ 
+**Example Requests:**
+- What is the best time to visit Paris?               
+- Tell me about the Olympic games in Sydney.
+- How many medalists does Croatia have?
+- What are the top tourist attractions in Tokyo?
+- Get the names of all the current Olympic champions in the weightlifting events.
+- Save it to PDF
+    """)
 # Images for user and bot
 user_image = "images/user.png"
 bot_image = "images/bot.png"
@@ -228,6 +243,8 @@ if submit_button:
     response = handle_user_input(user_input)
     if response:  # Only display the bot's response if it's not empty
         display_message(bot_image, "Globot", response, is_user=False)
+    if user_input:
+            display_message(user_image, "You", user_input, is_user=True)
 
 
 

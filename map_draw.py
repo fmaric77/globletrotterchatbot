@@ -20,7 +20,7 @@ def get_message_content(message):
 
 @tool
 def save_last_bot_response():
-    """Save the last bot response and displayed image to a PDF file and provide a download link."""
+    """Save the last bot response to a PDF file and provide a download link. Call this tool when user says 'save'"""
     if not st.session_state.message_history.messages:
         return "No messages in history to save."
 
@@ -53,17 +53,14 @@ def save_last_bot_response():
             image.save(tmp_image_file.name)
             pdf.image(tmp_image_file.name, x=10, y=pdf.get_y() + 10, w=100)
 
-    # Save PDF to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-        pdf.output(tmp_file.name)
-        tmp_file_path = tmp_file.name
-
-    # Read the PDF file into memory
-    with open(tmp_file_path, "rb") as pdf_file:
-        pdf_data = pdf_file.read()
+    # Save PDF to a BytesIO object
+    pdf_buffer = BytesIO()
+    pdf_output = pdf.output(dest='S').encode('latin-1')
+    pdf_buffer.write(pdf_output)
+    pdf_buffer.seek(0)
 
     # Provide download link
-    st.download_button(label="Download PDF", data=pdf_data, file_name="yourpdf.pdf", mime="application/pdf")
+    st.download_button(label="Download PDF", data=pdf_buffer, file_name="yourpdf.pdf", mime="application/pdf")
 
     return "PDF generated. Click the button to download."
 
