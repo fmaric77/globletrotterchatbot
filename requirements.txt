@@ -14,4 +14,4 @@ matplotlib
 seaborn
 folium
 fpdf
-dotenv
+python-dotenv
