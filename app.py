@@ -1,6 +1,4 @@
 import streamlit as st
-import boto3
-
 from langchain_aws import ChatBedrock
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
@@ -11,7 +9,6 @@ from dotenv import load_dotenv
 import logging
 import uuid
 load_dotenv()
-boto3.setup_default_session(region_name='eu-central-1')
 
 st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
 
