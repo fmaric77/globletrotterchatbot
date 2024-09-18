@@ -132,8 +132,7 @@ def predict_tourism_growth(total_medals: int) -> float:
     filename = f'predicted_tourism_growth_{next_year}.png'
     plt.savefig(filename)
     
-    # Display the plot in Streamlit
-    st.image(filename, caption=f'Predicted Tourism Growth for {next_year}')
+    
     
     return prediction[0]
 

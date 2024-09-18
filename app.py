@@ -217,6 +217,8 @@ with st.sidebar:
 - How many medalists does Croatia have?
 - What are the top tourist attractions in Tokyo?
 - Get the names of all the current Olympic champions in the weightlifting events.
+-Give top 3 countries with biggest increase in tourism for the next year
+-Predict tourism growth of croatia for 2025.
 - Save it to PDF
     """)
 # Images for user and bot
