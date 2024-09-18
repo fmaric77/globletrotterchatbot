@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 import logging
 import uuid
 load_dotenv()
-session = boto3.Session(region_name='eu-central-1'
+session = boto3.Session(region_name='eu-central-1')
 st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
 
 # Set up logging
