@@ -182,13 +182,14 @@ def handle_user_input(user_input):
         logger.debug(f"Response from agent: {response}")
         
         # Extract and format the bot's response
-        bot_response = ''
         if isinstance(response, dict) and 'output' in response:
             bot_response = response['output']
         elif isinstance(response, str):
             bot_response = response
         elif isinstance(response, list) and len(response) > 0 and isinstance(response[0], dict):
-            bot_response = response[0].get('text', '')
+            bot_response = ' '.join(item.get('text', '') for item in response)
+        else:
+            bot_response = str(response)
         
         # Add bot response to history
         st.session_state.message_history.add_message(AIMessage(content=bot_response))
@@ -199,9 +200,6 @@ def handle_user_input(user_input):
         return f"An error occurred: {str(e)}"
     
     return bot_response
-
-
-# Display banner image
 
 # Display banner image
 st.image("images/banner2.png", use_column_width=True)
