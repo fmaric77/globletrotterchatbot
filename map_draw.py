@@ -10,8 +10,6 @@ def get_message_content(message):
     if isinstance(message, (HumanMessage, AIMessage)):
         return message.content
     elif isinstance(message, dict):
-        if 'type' in message and message['type'] == 'text':
-            return message.get('text', '')
         return message.get('content', message.get('text', ''))
     elif isinstance(message, str):
         return message
@@ -28,12 +26,9 @@ def save_last_bot_response():
 
     # Retrieve the last AI message
     last_message = None
-    last_image = None
     for msg in reversed(st.session_state.message_history.messages):
         if isinstance(msg, AIMessage):
             last_message = get_message_content(msg)
-            if hasattr(msg, 'image') and msg.image:
-                last_image = msg.image
             break
 
     if not last_message:
@@ -52,11 +47,7 @@ def save_last_bot_response():
     pdf.multi_cell(0, 10, last_message.encode('latin-1', 'replace').decode('latin-1'))
 
     # Check if an image is displayed and add it to the PDF
-    if last_image:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_image_file:
-            last_image.save(tmp_image_file.name)
-            pdf.image(tmp_image_file.name, x=10, y=pdf.get_y() + 10, w=100)
-    elif 'displayed_image' in st.session_state:
+    if 'displayed_image' in st.session_state:
         image = st.session_state.displayed_image
         with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_image_file:
             image.save(tmp_image_file.name)
