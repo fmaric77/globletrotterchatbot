@@ -13,8 +13,8 @@ class RDSQueryManager:
     def __init__(self):
         self.connection = psycopg2.connect(
             host='database-1-instance-1.cj26esgeg1lm.us-east-1.rds.amazonaws.com',
-            user='globetrotter',
-            password='globetrotters',
+            user='globetrotters_app',
+            password='JaSamAplikacija',
             dbname=os.getenv('RDS_DATABASE'),  # Replace with your RDS database name
             port=5432  # PostgreSQL default port
         )
