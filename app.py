@@ -8,6 +8,7 @@ from langchain_community.chat_message_histories import StreamlitChatMessageHisto
 from dotenv import load_dotenv
 import logging
 import uuid
+import os
 load_dotenv()
 
 st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
