@@ -1,4 +1,6 @@
 import streamlit as st
+import boto3
+
 from langchain_aws import ChatBedrock
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
@@ -9,7 +11,7 @@ from dotenv import load_dotenv
 import logging
 import uuid
 load_dotenv()
-
+session = boto3.Session(region_name='eu-central-1'
 st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
 
 # Set up logging
@@ -63,7 +65,7 @@ if 'message_history' not in st.session_state:
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
 chat_model = None
 try:
-    chat_model = ChatBedrock(model_id=chat_model_id).bind_tools(tools)
+    chat_model = ChatBedrock(model_id=chat_model_id, session=session).bind_tools(tools)
 except Exception as e:
     logger.error(f"Error initializing ChatBedrock: {e}")
     st.error(f"Error initializing ChatBedrock: {e}")
