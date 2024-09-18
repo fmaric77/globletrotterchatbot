@@ -12,3 +12,5 @@ pymysql
 psycopg2-binary
 matplotlib
 seaborn
+folium
+fpdf

@@ -83,6 +83,7 @@ plt.close()
 print("\nScatter plot saved as 'total_medals_vs_tourism_growth.png'")
 
 # Define Pydantic model for input validation
+# Define Pydantic model for input validation
 class CountryTourismIncreaseInput(BaseModel):
     year: int
     top_n: int = 5
@@ -179,7 +180,7 @@ def country_with_biggest_tourist_increase(input_data: Dict) -> List[str]:
     # Plot the predicted tourism growth for the given year
     plt.figure(figsize=(15, 10))
     bars = plt.bar(results_df['country'], results_df['predicted_growth'], color=colors)
-    plt.title(f'Predicted Tourism Growth in {year + 1}', fontsize=16)
+    plt.title(f'Predicted Tourism Growth in {year}', fontsize=16)
     plt.xlabel('Country', fontsize=12)
     plt.ylabel('Predicted Tourism Growth (%)', fontsize=12)
     plt.xticks(rotation=90, fontsize=8)
@@ -196,7 +197,7 @@ def country_with_biggest_tourist_increase(input_data: Dict) -> List[str]:
     plt.legend([f'Top {top_n} Countries', 'Other Countries'], loc='upper right')
     
     plt.tight_layout()
-    filename = f'predicted_tourism_growth_{year + 1}.png'
+    filename = f'predicted_tourism_growth_{year}.png'
     plt.savefig(filename)
     plt.close()
     print(f"\nBar plot saved as '{filename}'")
