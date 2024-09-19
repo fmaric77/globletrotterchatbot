@@ -26,7 +26,7 @@ try:
     from wikipediatools import get_city_highlights, get_sport_clubs_info, get_sportsman_info
     from wikipediatools2 import get_best_travel_package, get_tourism_info
     from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
-    from map_draw import save_last_bot_response
+    from pdfgenerate import save_last_bot_response
     #from map_draw_2 import get_locations
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
@@ -210,13 +210,17 @@ with st.sidebar:
     st.markdown("**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**")
 
     sidebar_buttons = {
-        "What is the best time to visit Paris?": "What is the best time to visit Paris?",
+        "When is the best time to visit Paris?": "When is the best time to visit Paris?",
         "Tell me about the Olympic games in Sydney.": "Tell me about the Olympic games in Sydney.",
         "How many medalists does Croatia have?": "How many medalists does Croatia have?",
         "What are the top tourist attractions in Tokyo?": "What are the top tourist attractions in Tokyo?",
         "Get the names of all the current Olympic champions in the weightlifting events.": "Get the names of all the current Olympic champions in the weightlifting events.",
         "Give top 3 countries with biggest increase in tourism for the next year": "Give top 3 countries with biggest increase in tourism for the next year",
         "Predict tourism growth of Croatia for 2025.": "Predict tourism growth of Croatia for 2025.",
+        "Create a travel package for South Africa": "Create a travel package for South Africa",
+        "Who is Luka Modrić": "Who is Luka Modrić",
+
+
         "Save it to PDF": "Save it to PDF"
     }
 
