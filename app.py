@@ -27,7 +27,8 @@ try:
     from wikipediatools2 import get_best_travel_package, get_tourism_info
     from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
     from map_draw import save_last_bot_response
-    from map_draw_2 import get_locations
+    # from map_draw_2 import get_locations
+
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
@@ -49,7 +50,7 @@ tools = [
     country_with_biggest_tourist_increase,
     get_tourism_info,
     save_last_bot_response,
-    get_locations
+    # get_locations
 ]
 
 
@@ -207,20 +208,27 @@ def handle_user_input(user_input):
 st.image("images/banner2.png", use_column_width=True)
  
 # Sidebar with bot image and introduction text
+# Sidebar
 with st.sidebar:
     st.image("images/bot.png", width=100)
-    st.markdown("""**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**
- 
-**Example Requests:**
-- What is the best time to visit Paris?               
-- Tell me about the Olympic games in Sydney.
-- How many medalists does Croatia have?
-- What are the top tourist attractions in Tokyo?
-- Get the names of all the current Olympic champions in the weightlifting events.
-- Give top 3 countries with biggest increase in tourism for the next year
-- Predict tourism growth of croatia for 2025.
-- Save it to PDF
-    """)
+    st.markdown("**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**")
+
+    sidebar_buttons = {
+        "What is the best time to visit Paris?": "What is the best time to visit Paris?",
+        "Tell me about the Olympic games in Sydney.": "Tell me about the Olympic games in Sydney.",
+        "How many medalists does Croatia have?": "How many medalists does Croatia have?",
+        "What are the top tourist attractions in Tokyo?": "What are the top tourist attractions in Tokyo?",
+        "Get the names of all the current Olympic champions in the weightlifting events.": "Get the names of all the current Olympic champions in the weightlifting events.",
+        "Give top 3 countries with biggest increase in tourism for the next year": "Give top 3 countries with biggest increase in tourism for the next year",
+        "Predict tourism growth of Croatia for 2025.": "Predict tourism growth of Croatia for 2025.",
+        "Save it to PDF": "Save it to PDF"
+    }
+
+    for button_text, prompt in sidebar_buttons.items():
+        if st.button(button_text):
+            st.session_state.user_input = prompt
+            st.session_state.submit_clicked = True
+
 # Images for user and bot
 user_image = "images/user.png"
 bot_image = "images/bot.png"
@@ -238,15 +246,21 @@ def display_message(image_url, sender, message, is_user=True):
 
 # Form for user input
 with st.form(key='user_input_form'):
-    user_input = st.text_input("Enter your query:")
+    user_input = st.text_input("Enter your query:", value=st.session_state.user_input)
     submit_button = st.form_submit_button(label='Send')
 
-if submit_button:
-    response = handle_user_input(user_input)
+if submit_button or ('submit_clicked' in st.session_state and st.session_state.submit_clicked):
+    response = handle_user_input(st.session_state.user_input)
     if response:  # Only display the bot's response if it's not empty
         display_message(bot_image, "Globot", response, is_user=False)
-    if user_input:
-            display_message(user_image, "You", user_input, is_user=True)
+    if st.session_state.user_input:
+        display_message(user_image, "You", st.session_state.user_input, is_user=True)
+
+    # Clear the input and reset submit flag after submission
+    st.session_state.user_input = ""
+    st.session_state.submit_clicked = False
+
+# Force a rerun to update the form with the new user_input value
 
 
 
