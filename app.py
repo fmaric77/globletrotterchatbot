@@ -272,14 +272,14 @@ def on_suggestion_click(query):
 st.sidebar.header("Suggestion Buttons")
 suggestions = [
     "Which countries are the most successful in their olympic performance?",
-    "Show me the top 5 cities that produced the most Olympic medalists in the last 10 years",
+    "Show me the 3 cities which produced the most Olympic medalists in recent years.",
     "Tell me about the Olympic records in swimming.",
     "Create a travel package for France.",
     "Tell me something about Luka Modrić.",
     "In which countries is basketball a popular sport?",
     "Give top 3 countries with biggest increase in tourism for 2025 year",
-    "Create a map from the specified travel package",
-    "Save it to PDF"
+    "Create a map from the specified travel package.",
+    "Save it to PDF."
 ]
  
  
