@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 import logging
 import uuid
 import os
+import time
+start_time = time.time()
 load_dotenv()
 
 st.set_page_config(page_title="Globot", page_icon="images/bot.png", layout="wide")
@@ -27,7 +29,7 @@ try:
     from wikipediatools2 import get_best_travel_package, get_tourism_info
     from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
     from pdfgenerate import save_last_bot_response
-    #from map_draw_2 import get_locations
+    from mapper import get_locations
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
@@ -49,8 +51,10 @@ tools = [
     country_with_biggest_tourist_increase,
     get_tourism_info,
     save_last_bot_response,
-    #get_locations
+    get_locations
 ]
+
+
 
 # Ensure AWS_DEFAULT_REGION is set
 if 'AWS_DEFAULT_REGION' not in os.environ:
@@ -64,9 +68,6 @@ if 'session_id' not in st.session_state:
 if 'message_history' not in st.session_state:
     st.session_state.message_history = StreamlitChatMessageHistory(key="chat_messages")
 
-# Initialize user_input in session state
-if 'user_input' not in st.session_state:
-    st.session_state.user_input = ""
 
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
@@ -82,8 +83,12 @@ prompt = ChatPromptTemplate.from_messages([
     ("system", """You are a helpful assistant specializing in Olympic travel information. Use the tools at your disposal to answer questions. Maintain context from previous messages in the conversation. Remember details about the user that they've shared. If you're unsure about something, you can ask for clarification.
     For any user queries not related to travel, first use the 'query_athena' tool. When using this tool return the result of the query as a response to the user.
     Always respond to the user conversationally. Never mention tools, table names and queries, just answer the user's question.
-    For example, if the user asked you to 'list all coaches from <some_country> from the 2024 Olympic Games', you would use the 'query_athena_tool' tool and respond with the list you got as a result of the query.
-    """
+    For example, if the user asked you to 'list all coaches from <some_country> at the 2024 Olympic Games', you would use the 'query_athena' tool and respond:
+    'These are the coaches from <some_country>:
+    <coach_1>,
+    <coach_2>,
+    <coach_3>
+    etc.'"""
     ),
     ("human", "{input}"),
     ("placeholder", "{agent_scratchpad}")
@@ -147,6 +152,11 @@ def manage_message_history():
         MAX_HISTORY_LENGTH
     )
 
+import time
+
+MAX_RETRIES = 3
+RETRY_DELAY = 2  # seconds
+
 def handle_user_input(user_input):
     if not agent_executor:
         return "Agent executor is not initialized."
@@ -173,12 +183,21 @@ def handle_user_input(user_input):
         memory_contents = get_memory_contents()
         full_input = f"{user_input}\n\nPrevious Conversation:\n{memory_contents}"
         
-        # Invoke the agent with the updated memory
-        response = with_message_history.invoke(
-            {"input": full_input, "chat_history": chat_history},
-            config={"configurable": {"session_id": st.session_state.session_id}}
-        )
-        logger.debug(f"Response from agent: {response}")
+        # Retry logic for invoking the agent
+        for attempt in range(MAX_RETRIES):
+            try:
+                response = with_message_history.invoke(
+                    {"input": full_input, "chat_history": chat_history},
+                    config={"configurable": {"session_id": st.session_state.session_id}}
+                )
+                logger.debug(f"Response from agent: {response}")
+                break  # Exit loop if successful
+            except TimeoutError as e:
+                logger.warning(f"Timeout occurred, retrying... ({attempt + 1}/{MAX_RETRIES})")
+                if attempt < MAX_RETRIES - 1:
+                    time.sleep(RETRY_DELAY)
+                else:
+                    raise e
         
         # Extract and format the bot's response
         if isinstance(response, dict) and 'output' in response:
@@ -194,6 +213,9 @@ def handle_user_input(user_input):
         st.session_state.message_history.add_message(AIMessage(content=bot_response))
         manage_message_history()
         
+    except TimeoutError:
+        logger.error("Failed to get a response after multiple retries due to timeout.")
+        return "The request timed out. Please try again later."
     except Exception as e:
         logger.error(f"Error handling user input: {e}")
         return f"An error occurred: {str(e)}"
@@ -204,31 +226,11 @@ def handle_user_input(user_input):
 st.image("images/banner2.png", use_column_width=True)
  
 # Sidebar with bot image and introduction text
-# Sidebar
 with st.sidebar:
     st.image("images/bot.png", width=100)
-    st.markdown("**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**")
-
-    sidebar_buttons = {
-        "When is the best time to visit Paris?": "When is the best time to visit Paris?",
-        "Tell me about the Olympic games in Sydney.": "Tell me about the Olympic games in Sydney.",
-        "How many medalists does Croatia have?": "How many medalists does Croatia have?",
-        "What are the top tourist attractions in Tokyo?": "What are the top tourist attractions in Tokyo?",
-        "Get the names of all the current Olympic champions in the weightlifting events.": "Get the names of all the current Olympic champions in the weightlifting events.",
-        "Give top 3 countries with biggest increase in tourism for the next year": "Give top 3 countries with biggest increase in tourism for the next year",
-        "Predict tourism growth of Croatia for 2025.": "Predict tourism growth of Croatia for 2025.",
-        "Create a travel package for South Africa": "Create a travel package for South Africa",
-        "Who is Luka Modrić": "Who is Luka Modrić",
-
-
-        "Save it to PDF": "Save it to PDF"
-    }
-
-    for button_text, prompt in sidebar_buttons.items():
-        if st.button(button_text):
-            st.session_state.user_input = prompt
-            st.session_state.submit_clicked = True
-
+    st.markdown("""**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**
+ 
+""")
 # Images for user and bot
 user_image = "images/user.png"
 bot_image = "images/bot.png"
@@ -244,18 +246,52 @@ def display_message(image_url, sender, message, is_user=True):
             content = content[0].get('text', '')
         st.write(f"**{sender}:** {content}", unsafe_allow_html=True)
 
-# Form for user input
-with st.form(key='user_input_form'):
-    user_input = st.text_input("Enter your query:", value=st.session_state.user_input)
-    submit_button = st.form_submit_button(label='Send')
 
-if submit_button or ('submit_clicked' in st.session_state and st.session_state.submit_clicked):
-    response = handle_user_input(st.session_state.user_input)
-    if response:  # Only display the bot's response if it's not empty
-        display_message(bot_image, "Globot", response, is_user=False)
-    if st.session_state.user_input:
-        display_message(user_image, "You", st.session_state.user_input, is_user=True)
+# Function to handle suggestion button clicks
+def on_suggestion_click(query):
+    st.session_state.user_input = query
+    response = handle_user_input(query)
+    if response:
+        display_message(bot_image, "Bot", response, is_user=False)
+ 
+# User input with suggestion buttons
+st.sidebar.header("Suggestion Buttons")
+suggestions = [
+    "Which countries are the most successful in their olympic performance?",
+    "What are the trends in medal counts for athletics across Italy?",
+    "Tell me about the Olympic records in swimming.",
+    "Give me a travel itinerary for 15 days across Asian countries focusing on countries that did well in the Olympics",
+    "What is the best time to visit Paris?",
+    "Tell me about the Olympic games in Sydney.",
+    "How many medalists does Croatia have?",
+    "What are the top tourist attractions in Tokyo?",
+    "Get the names of all the current Olympic champions in the weightlifting events.",
+    "Give top 3 countries with biggest increase in tourism for 2025 year",
+    "Predict tourism growth of Croatia for 2025.",
+    "Save it to PDF"
+]
 
-    # Clear the input and reset submit flag after submission
-    st.session_state.user_input = ""
-    st.session_state.submit_clicked = False
+ 
+# Display suggestion buttons
+for suggestion in suggestions:
+    if st.sidebar.button(suggestion):
+        on_suggestion_click(suggestion)
+ 
+# Text input for custom queries
+st.text_input("Enter your query:", key="user_input", on_change=lambda: on_suggestion_click(st.session_state.user_input))
+ 
+# Your existing code...
+
+# Display the chat interface
+if st.button("Send"):
+    user_input = st.session_state.user_input
+    if user_input:
+        response = handle_user_input(user_input)
+        if response:
+            display_message(bot_image, "Bot", response, is_user=False)
+
+# Calculate and print the elapsed time
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Runtime: {elapsed_time:.2f} seconds")
+ 
