@@ -272,20 +272,12 @@ def on_suggestion_click(query):
 st.sidebar.header("Suggestion Buttons")
 suggestions = [
     "Which countries are the most successful in their olympic performance?",
-    "What are the trends in medal counts for athletics across Italy?",
-    "Tell me about the Olympic records in swimming.",
     "Show me the top 5 cities that produced the most Olympic medalists in the last 10 years",
-    "In which countries is basketball a popular sport?",
-    "Give me a travel package for 15 days across Asian countries focusing on countries that did well in the Olympics",
-    "What is the best time to visit Paris?",
-    "Tell me about the Olympic Games in Sydney.",
-    "How many medalists does Croatia have?",
+    "Tell me about the Olympic records in swimming.",
+    "Create a travel package for France.",
     "Tell me something about Luka Modrić.",
-    "Tell me something about sports clubs in Zagreb.",
-    "What are the top tourist attractions in Tokyo?",
-    "List all the current Olympic champions in weightlifting.",
+    "In which countries is basketball a popular sport?",
     "Give top 3 countries with biggest increase in tourism for 2025 year",
-    "Predict tourism growth of Croatia for 2025.",
     "Create a map from the specified travel package",
     "Save it to PDF"
 ]
