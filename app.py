@@ -52,8 +52,6 @@ tools = [
     #get_locations
 ]
 
-
-
 # Ensure AWS_DEFAULT_REGION is set
 if 'AWS_DEFAULT_REGION' not in os.environ:
     os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'
@@ -66,6 +64,9 @@ if 'session_id' not in st.session_state:
 if 'message_history' not in st.session_state:
     st.session_state.message_history = StreamlitChatMessageHistory(key="chat_messages")
 
+# Initialize user_input in session state
+if 'user_input' not in st.session_state:
+    st.session_state.user_input = ""
 
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
@@ -254,15 +255,3 @@ if submit_button or ('submit_clicked' in st.session_state and st.session_state.s
     # Clear the input and reset submit flag after submission
     st.session_state.user_input = ""
     st.session_state.submit_clicked = False
-
-# Force a rerun to update the form with the new user_input value
-
-
-
-# # Debug information
-# if st.checkbox("Show Debug Info"):
-#     st.write(f"Session ID: {st.session_state.session_id}")
-#     st.write(f"Number of messages in memory: {len(st.session_state.message_history.messages)}")
-#     st.write("Memory contents (truncated):")
-#     memory_contents = get_memory_contents()
-#     st.write(memory_contents[:500] + "..." if len(memory_contents) > 500 else memory_contents)
