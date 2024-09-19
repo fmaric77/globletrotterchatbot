@@ -153,19 +153,22 @@ def manage_message_history():
         MAX_HISTORY_LENGTH
     )
 
+MAX_RETRIES = 3
+RETRY_DELAY = 2
+
 def handle_user_input(user_input):
     if not agent_executor:
         return "Agent executor is not initialized."
-    
+   
     # Truncate user input if it exceeds the maximum length
     if len(user_input) > MAX_INPUT_LENGTH:
         user_input = user_input[:MAX_INPUT_LENGTH] + "..."
-    
+   
     try:
         # Add user input to history
         st.session_state.message_history.add_message(HumanMessage(content=user_input))
         manage_message_history()
-
+ 
         # Prepare the chat history for the model
         chat_history = []
         for msg in st.session_state.message_history.messages:
@@ -174,18 +177,37 @@ def handle_user_input(user_input):
                 chat_history.append((content, None))
             else:
                 chat_history.append((None, content))
-        
+       
         # Extract memory contents and include it in the input
         memory_contents = get_memory_contents()
         full_input = f"{user_input}\n\nPrevious Conversation:\n{memory_contents}"
-        
-        # Invoke the agent with the updated memory
-        response = with_message_history.invoke(
-            {"input": full_input, "chat_history": chat_history},
-            config={"configurable": {"session_id": st.session_state.session_id}}
-        )
-        logger.debug(f"Response from agent: {response}")
-        
+       
+        # Retry logic for invoking the agent
+        for attempt in range(MAX_RETRIES):
+            try:
+                response = with_message_history.invoke(
+                    {"input": full_input, "chat_history": chat_history},
+                    config={"configurable": {"session_id": st.session_state.session_id}}
+                )
+                logger.debug(f"Response from agent: {response}")
+                break  # Exit loop if successful
+            except TimeoutError as e:
+                logger.warning(f"Timeout occurred, retrying... ({attempt + 1}/{MAX_RETRIES})")
+                if attempt < MAX_RETRIES - 1:
+                    time.sleep(RETRY_DELAY)
+                else:
+                    raise e
+            except Exception as e:
+                error_message = str(e)
+                if "serviceUnavailableException" in error_message:
+                    logger.warning(f"Service unavailable, retrying... ({attempt + 1}/{MAX_RETRIES})")
+                    if attempt < MAX_RETRIES - 1:
+                        time.sleep(RETRY_DELAY)
+                    else:
+                        raise e
+                else:
+                    raise e
+       
         # Extract and format the bot's response
         if isinstance(response, dict) and 'output' in response:
             bot_response = response['output']
@@ -195,16 +217,24 @@ def handle_user_input(user_input):
             bot_response = ' '.join(item.get('text', '') for item in response)
         else:
             bot_response = str(response)
-        
+       
         # Add bot response to history
         st.session_state.message_history.add_message(AIMessage(content=bot_response))
         manage_message_history()
-        
+       
+    except TimeoutError:
+        logger.error("Failed to get a response after multiple retries due to timeout.")
+        return "The request timed out. Please try again later."
     except Exception as e:
+        error_message = str(e)
+        if "serviceUnavailableException" in error_message:
+            logger.error("Bedrock is unable to process your request.")
+            return "Bedrock is currently unavailable. Please try again later."
         logger.error(f"Error handling user input: {e}")
-        return f"An error occurred: {str(e)}"
-    
+        return f"An error occurred: {error_message}"
+   
     return bot_response
+ 
 
 # Display banner image
 st.image("images/banner2.png", use_column_width=True)
