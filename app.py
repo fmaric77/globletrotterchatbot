@@ -51,7 +51,7 @@ tools = [
     country_with_biggest_tourist_increase,
     get_tourism_info,
     save_last_bot_response,
-    # get_locations
+    get_locations
 ]
 
 
