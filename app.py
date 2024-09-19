@@ -26,7 +26,7 @@ try:
     from wikipediatools import get_city_highlights, get_sport_clubs_info, get_sportsman_info
     from wikipediatools2 import get_best_travel_package, get_tourism_info
     from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
-    from map_draw import save_last_bot_response
+    from pdfgenerate import save_last_bot_response
     #from map_draw_2 import get_locations
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
@@ -52,8 +52,6 @@ tools = [
     #get_locations
 ]
 
-
-
 # Ensure AWS_DEFAULT_REGION is set
 if 'AWS_DEFAULT_REGION' not in os.environ:
     os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'
@@ -66,6 +64,9 @@ if 'session_id' not in st.session_state:
 if 'message_history' not in st.session_state:
     st.session_state.message_history = StreamlitChatMessageHistory(key="chat_messages")
 
+# Initialize user_input in session state
+if 'user_input' not in st.session_state:
+    st.session_state.user_input = ""
 
 # Bind tools to model
 chat_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
@@ -203,20 +204,31 @@ def handle_user_input(user_input):
 st.image("images/banner2.png", use_column_width=True)
  
 # Sidebar with bot image and introduction text
+# Sidebar
 with st.sidebar:
     st.image("images/bot.png", width=100)
-    st.markdown("""**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**
- 
-**Example Requests:**
-- What is the best time to visit Paris?               
-- Tell me about the Olympic games in Sydney.
-- How many medalists does Croatia have?
-- What are the top tourist attractions in Tokyo?
-- Get the names of all the current Olympic champions in the weightlifting events.
-- Give top 3 countries with biggest increase in tourism for the next year
-- Predict tourism growth of croatia for 2025.
-- Save it to PDF
-    """)
+    st.markdown("**Hello! I'm Globot, your friendly travel assistant for Olympic Games information. Ask me about travel destinations, weather, and more.**")
+
+    sidebar_buttons = {
+        "When is the best time to visit Paris?": "When is the best time to visit Paris?",
+        "Tell me about the Olympic games in Sydney.": "Tell me about the Olympic games in Sydney.",
+        "How many medalists does Croatia have?": "How many medalists does Croatia have?",
+        "What are the top tourist attractions in Tokyo?": "What are the top tourist attractions in Tokyo?",
+        "Get the names of all the current Olympic champions in the weightlifting events.": "Get the names of all the current Olympic champions in the weightlifting events.",
+        "Give top 3 countries with biggest increase in tourism for the next year": "Give top 3 countries with biggest increase in tourism for the next year",
+        "Predict tourism growth of Croatia for 2025.": "Predict tourism growth of Croatia for 2025.",
+        "Create a travel package for South Africa": "Create a travel package for South Africa",
+        "Who is Luka Modrić": "Who is Luka Modrić",
+
+
+        "Save it to PDF": "Save it to PDF"
+    }
+
+    for button_text, prompt in sidebar_buttons.items():
+        if st.button(button_text):
+            st.session_state.user_input = prompt
+            st.session_state.submit_clicked = True
+
 # Images for user and bot
 user_image = "images/user.png"
 bot_image = "images/bot.png"
@@ -234,22 +246,16 @@ def display_message(image_url, sender, message, is_user=True):
 
 # Form for user input
 with st.form(key='user_input_form'):
-    user_input = st.text_input("Enter your query:")
+    user_input = st.text_input("Enter your query:", value=st.session_state.user_input)
     submit_button = st.form_submit_button(label='Send')
 
-if submit_button:
-    response = handle_user_input(user_input)
+if submit_button or ('submit_clicked' in st.session_state and st.session_state.submit_clicked):
+    response = handle_user_input(st.session_state.user_input)
     if response:  # Only display the bot's response if it's not empty
         display_message(bot_image, "Globot", response, is_user=False)
-    if user_input:
-            display_message(user_image, "You", user_input, is_user=True)
+    if st.session_state.user_input:
+        display_message(user_image, "You", st.session_state.user_input, is_user=True)
 
-
-
-# # Debug information
-# if st.checkbox("Show Debug Info"):
-#     st.write(f"Session ID: {st.session_state.session_id}")
-#     st.write(f"Number of messages in memory: {len(st.session_state.message_history.messages)}")
-#     st.write("Memory contents (truncated):")
-#     memory_contents = get_memory_contents()
-#     st.write(memory_contents[:500] + "..." if len(memory_contents) > 500 else memory_contents)
+    # Clear the input and reset submit flag after submission
+    st.session_state.user_input = ""
+    st.session_state.submit_clicked = False
