@@ -27,6 +27,7 @@ try:
     from wikipediatools2 import get_best_travel_package, get_tourism_info
     from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
     from map_draw import save_last_bot_response
+    from map_draw_2 import get_locations
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
@@ -47,7 +48,8 @@ tools = [
     predict_tourism_growth,
     country_with_biggest_tourist_increase,
     get_tourism_info,
-    save_last_bot_response
+    save_last_bot_response,
+    get_locations
 ]
 
 
