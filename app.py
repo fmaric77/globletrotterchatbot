@@ -27,8 +27,7 @@ try:
     from wikipediatools2 import get_best_travel_package, get_tourism_info
     from prediction_model import predict_tourism_growth, country_with_biggest_tourist_increase
     from map_draw import save_last_bot_response
-    # from map_draw_2 import get_locations
-
+    #from map_draw_2 import get_locations
 except ImportError as e:
     logger.error(f"Error importing modules: {e}")
     st.error(f"Error importing modules: {e}")
@@ -50,7 +49,7 @@ tools = [
     country_with_biggest_tourist_increase,
     get_tourism_info,
     save_last_bot_response,
-    # get_locations
+    #get_locations
 ]
 
 
@@ -82,12 +81,8 @@ prompt = ChatPromptTemplate.from_messages([
     ("system", """You are a helpful assistant specializing in Olympic travel information. Use the tools at your disposal to answer questions. Maintain context from previous messages in the conversation. Remember details about the user that they've shared. If you're unsure about something, you can ask for clarification.
     For any user queries not related to travel, first use the 'query_athena' tool. When using this tool return the result of the query as a response to the user.
     Always respond to the user conversationally. Never mention tools, table names and queries, just answer the user's question.
-    For example, if the user asked you to 'list all coaches from <some_country> at the 2024 Olympic Games', you would use the 'query_athena' tool and respond:
-    'These are the coaches from <some_country>:
-    <coach_1>,
-    <coach_2>,
-    <coach_3>
-    etc.'"""
+    For example, if the user asked you to 'list all coaches from <some_country> from the 2024 Olympic Games', you would use the 'query_athena_tool' tool and respond with the list you got as a result of the query.
+    """
     ),
     ("human", "{input}"),
     ("placeholder", "{agent_scratchpad}")
